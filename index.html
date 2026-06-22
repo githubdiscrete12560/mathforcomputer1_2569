@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เวกเตอร์ CS ปี 1 + แนะนำเครื่องมือ</title>
+    <!-- MathJax -->
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* --- Reset & base --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+            background: #0b1120;
+            color: #e2e8f0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .slides-wrapper {
+            position: relative;
+            width: 92vw;
+            max-width: 1200px;
+            height: 88vh;
+            max-height: 900px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            overflow: hidden;
+        }
+        .slides-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2.5rem 3.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: scale(0.96);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4a5a7a transparent;
+        }
+        .slide::-webkit-scrollbar { width: 4px; }
+        .slide::-webkit-scrollbar-thumb { background: #4a5a7a; border-radius: 10px; }
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            z-index: 10;
+        }
+        .slide-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 1.2rem;
+            font-weight: 300;
+        }
+        .slide-content {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+        .slide-content p { margin-bottom: 0.8rem; }
+        .highlight-box {
+            background: rgba(251, 191, 36, 0.08);
+            border-left: 4px solid #fbbf24;
+            padding: 1rem 1.8rem;
+            border-radius: 0.8rem;
+            margin: 1rem 0;
+        }
+        .code-block {
+            background: #0a0f1a;
+            border-radius: 0.8rem;
+            padding: 1.2rem 1.8rem;
+            margin: 0.8rem 0;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #a5b4fc;
+        }
+        .code-block .comment { color: #6b7b8f; font-style: italic; }
+        .code-block .keyword { color: #f472b6; font-weight: 600; }
+        .code-block .string { color: #34d399; }
+        .code-block .func { color: #60a5fa; }
+        .code-block .var { color: #fbbf24; }
+        .code-block .number { color: #f472b6; }
+        .code-block .output { color: #94a3b8; border-top: 1px solid #1e293b; margin-top: 0.5rem; padding-top: 0.5rem; }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.4rem 0 0.4rem 1.8rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .feature-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: #fbbf24;
+        }
+        .feature-list li:last-child { border-bottom: none; }
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            counter-increment: step;
+            padding: 0.5rem 0 0.5rem 2.8rem;
+            position: relative;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            background: #fbbf24;
+            color: #0b1120;
+            font-weight: 700;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .slide-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            background: rgba(0,0,0,0.25);
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+        .slide-table thead {
+            background: rgba(251,191,36,0.12);
+        }
+        .slide-table th {
+            text-align: left;
+            padding: 0.6rem 1.2rem;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .slide-table td {
+            padding: 0.6rem 1.2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .slide-table tr:last-child td { border-bottom: none; }
+        .nav-controls {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 20;
+            padding: 0 2rem;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #e2e8f0;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            backdrop-filter: blur(8px);
+        }
+        .nav-btn:hover {
+            background: rgba(251,191,36,0.2);
+            border-color: #fbbf24;
+            transform: scale(1.05);
+        }
+        .nav-dots {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+        .dot {
+            width: 0.7rem;
+            height: 0.7rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+        }
+        .dot.active {
+            background: #fbbf24;
+            width: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 12px rgba(251,191,36,0.4);
+        }
+        .slide-counter {
+            position: absolute;
+            top: 1.2rem;
+            right: 2rem;
+            font-size: 0.85rem;
+            color: #64748b;
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.05);
+            z-index: 15;
+            font-weight: 500;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(251,191,36,0.15);
+            padding: 0.1rem 0.8rem;
+            border-radius: 1rem;
+            color: #fbbf24;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-right: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .slide { padding: 1.5rem; }
+            .slide-title { font-size: 1.6rem; }
+            .slide-content { font-size: 0.95rem; }
+            .code-block { font-size: 0.8rem; padding: 0.8rem; }
+            .slide-table { font-size: 0.85rem; }
+            .slide-table th, .slide-table td { padding: 0.4rem 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .slide-title { font-size: 1.4rem; }
+            .slide-subtitle { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="slides-wrapper">
+    <div class="slides-track" id="slidesTrack">
+        <!-- ====== สไลด์ 1: ชื่อเรื่อง ====== -->
+        <div class="slide active" data-index="0">
+            <div class="slide-counter">1 / 24</div>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <span style="font-size: 3rem;">📐</span>
+                <span style="font-size: 3rem;">🧮</span>
+                <span style="font-size: 3rem;">🎮</span>
+            </div>
+            <h1 class="slide-title">แบบฝึกหัดเรื่องเวกเตอร์</h1>
+            <p class="slide-subtitle">สำหรับนักศึกษาปี 1 CS (พร้อมแนะนำเครื่องมือ)</p>
+            <div class="slide-content">
+                <p>สไลด์นี้ประกอบด้วยส่วนแนะนำเครื่องมือ และกิจกรรม 3 ส่วน ที่จะช่วยให้คุณเข้าใจเวกเตอร์ทั้งในเชิงภาพ การเขียนโปรแกรม และการพัฒนาเกม</p>
+                <div style="background: rgba(0,0,0,0.3); border-radius: 1rem; padding: 1rem 1.5rem; margin-top: 1rem;">
+                    <p style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                        <span><span class="badge">📖 แนะนำ</span> Python · Colab · Unity · C#</span>
+                        <span><span class="badge">Part 1</span> GeoGebra – 15-20 นาที</span>
+                        <span><span class="badge">Part 2</span> Python / NumPy – 20-25 นาที</span>
+                        <span><span class="badge">Part 3</span> Unity / C# – 20-25 นาที</span>
+                    </p>
+                </div>
+                <p style="margin-top: 1.2rem; color: #94a3b8;">👉 ใช้ปุ่มลูกศรหรือปุ่มซ้าย/ขวาเพื่อเปลี่ยนสไลด์</p>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์ 2: ภาพรวมกิจกรรม ====== -->
+        <div class="slide" data-index="1">
+            <div class="slide-counter">2 / 24</div>
+            <h2 class="slide-title">ภาพรวมกิจกรรม</h2>
+            <div class="slide-content">
+                <table class="slide-table">
+                    <thead><tr><th>ส่วน</th><th>เครื่องมือ</th><th>เวลาโดยประมาณ</th><th>เป้าหมาย</th></tr></thead>
+                    <tbody>
+                        <tr><td>Part 1</td><td>GeoGebra</td><td>15-20 นาที</td><td>เข้าใจเวกเตอร์เชิงภาพ: ขนาด ทิศทาง การบวก และการคูณด้วยสเกลาร์</td></tr>
+                        <tr><td>Part 2</td><td>Python / NumPy</td><td>20-25 นาที</td><td>ใช้เวกเตอร์แทนข้อมูลและคำนวณด้วยโค้ด</td></tr>
+                        <tr><td>Part 3</td><td>Unity / C#</td><td>20-25 นาที</td><td>ใช้เวกเตอร์แทนตำแหน่ง ทิศทาง และการเคลื่อนที่ในเกม</td></tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <p><strong>💡 เป้าหมายรวม:</strong> เชื่อมโยงแนวคิดเวกเตอร์จากคณิตศาสตร์ สู่วิทยาการข้อมูล และการพัฒนาเกม</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์ 3 (ใหม่): รู้จักเครื่องมือของเรา ====== -->
+        <div class="slide" data-index="2">
+            <div class="slide-counter">3 / 24</div>
+            <h2 class="slide-title">รู้จักเครื่องมือทั้ง 4 ตัว</h2>
+            <p class="slide-subtitle">เครื่องมือที่ใช้ในแบบฝึกหัดนี้</p>
+            <div class="slide-content">
+                <table class="slide-table">
+                    <thead><tr><th>เครื่องมือ</th><th>ประเภท</th><th>ใช้ทำอะไรในแบบฝึกหัดนี้</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="tool-icon">🐍</span> Python</td><td>ภาษาโปรแกรม</td><td>เขียนโค้ดคำนวณเวกเตอร์ จัดการข้อมูล</td></tr>
+                        <tr><td><span class="tool-icon">☁️</span> Google Colab</td><td>คลาวด์ Notebook</td><td>เขียน Python บนเว็บ ไม่ต้องติดตั้ง ใช้ GPU ฟรี</td></tr>
+                        <tr><td><span class="tool-icon">🎮</span> Unity</td><td>Game Engine</td><td>จำลองการเคลื่อนที่ 3 มิติด้วย Vector3</td></tr>
+                        <tr><td><span class="tool-icon">#️⃣</span> C#</td><td>ภาษาโปรแกรม</td><td>เขียนสคริปต์ควบคุมวัตถุใน Unity</td></tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <p><strong>🔗 ทุกเครื่องมือฟรี!</strong> Python, Colab, Unity (Personal) และ C# (ใน Unity) ใช้งานได้ไม่มีค่าใช้จ่าย</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์ 4 (ใหม่): Python คืออะไร ====== -->
+        <div class="slide" data-index="3">
+            <div class="slide-counter">4 / 24</div>
+            <h2 class="slide-title">🐍 Python คืออะไร?</h2>
+            <p class="slide-subtitle">ภาษาโปรแกรมยอดนิยม เรียนง่าย ใช้ได้หลากหลาย</p>
+            <div class="slide-content">
+                <ul class="feature-list">
+                    <li><strong>เรียนรู้ง่าย</strong> — ไวยากรณ์คล้ายภาษาอังกฤษ อ่านและเขียนเข้าใจง่าย</li>
+                    <li><strong>ใช้งานได้หลากหลาย</strong> — Web, Data Science, AI, Automation, Game (Pygame)</li>
+                    <li><strong>มีไลบรารีมากมาย</strong> — NumPy (คำนวณเวกเตอร์), Pandas (ข้อมูล), Matplotlib (พล็อตกราฟ)</li>
+                    <li><strong>ชุมชนใหญ่</strong> — หาคำตอบและความช่วยเหลือได้ง่ายทั่วโลก</li>
+                </ul>
+                <p><strong>ตัวอย่างโค้ด Python พื้นฐาน:</strong></p>
+                <div class="code-block">
+                    <span class="comment"># ประกาศตัวแปรและแสดงผล</span><br>
+                    <span class="var">name</span> = <span class="string">"CS Student"</span><br>
+                    <span class="var">scores</span> = [85, 90, 78]  <span class="comment"># list เปรียบเสมือนเวกเตอร์ 1 มิติ</span><br>
+                    <span class="keyword">print</span>(<span class="string">f"ยินดีต้อนรับ {name}!"</span>)<br>
+                    <span class="keyword">print</span>(<span class="string">"คะแนนเฉลี่ย:"</span>, <span class="func">sum</span>(scores)/<span class="func">len</span>(scores))
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem;">✅ ใน Part 2 เราจะใช้ Python + NumPy ในการคำนวณเวกเตอร์โดยตรง</p>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์ 5 (ใหม่): Google Colab คืออะไร ====== -->
+        <div class="slide" data-index="4">
+            <div class="slide-counter">5 / 24</div>
+            <h2 class="slide-title">☁️ Google Colab คืออะไร?</h2>
+            <p class="slide-subtitle">Colaboratory — เขียน Python บนคลาวด์ ฟรี! ไม่ต้องติดตั้ง</p>
+            <div class="slide-content">
+                <ul class="feature-list">
+                    <li><strong>ไม่ต้องติดตั้งซอฟต์แวร์</strong> — ใช้ผ่านเว็บเบราว์เซอร์เท่านั้น</li>
+                    <li><strong>เชื่อมต่อกับ Google Drive</strong> — บันทึกไฟล์อัตโนมัติ แชร์ง่าย</li>
+                    <li><strong>มี GPU / TPU ฟรี</strong> — เหมาะกับงาน Machine Learning และการคำนวณหนัก</li>
+                    <li><strong>รูปแบบ Notebook</strong> — ผสานโค้ด, ผลลัพธ์, และคำอธิบาย (Markdown) ไว้ในไฟล์เดียว</li>
+                    <li><strong>ทำงานร่วมกันได้</strong> — แชร์ลิงก์ให้เพื่อนแก้ไขพร้อมกันแบบเรียลไทม์</li>
+                </ul>
+                <div class="highlight-box">
+                    <p><strong>🚀 เริ่มต้นง่าย:</strong> ไปที่ <a href="https://colab.research.google.com" target="_blank" style="color: #fbbf24;">colab.research.google.com</a> → Login Google → สร้าง Notebook ใหม่</p>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem;">💡 ใน Part 2 เราจะรันโค้ด Python บน Colab กัน!</p>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์ 6 (ใหม่): Unity และ C# ====== -->
+        <div class="slide" data-index="5">
+            <div class="slide-counter">6 / 24</div>
+            <h2 class="slide-title">🎮 Unity &amp; #️⃣ C#</h2>
+            <p class="slide-subtitle">เครื่องมือสร้างเกม 3D / 2D ชั้นนำของโลก</p>
+            <div class="slide-content">
+                <p><strong>Unity</strong> คือ Game Engine (เอนจินเกม) ที่รองรับการสร้างเกม, แอนิเมชัน, VR/AR และจำลองสถานการณ์</p>
+                <ul class="feature-list">
+                    <li><strong>ข้ามแพลตฟอร์ม</strong> — สร้างครั้งเดียว เล่นได้ทั้ง PC, Mobile, Console</li>
+                    <li><strong>ใช้ C# ในการเขียนสคริปต์</strong> — ควบคุมพฤติกรรมของวัตถุในเกม</li>
+                </ul>
+                <p><strong>C# (ซีชาร์ป)</strong> คือภาษาโปรแกรมเชิงวัตถุ (OOP) ที่ทันสมัย มีประสิทธิภาพสูง</p>
+                <ul class="feature-list">
+                    <li><strong>ไวยากรณ์คล้าย Java และ C++</strong> — แต่เรียนรู้และใช้งานง่ายกว่า</li>
+                    <li><strong>โครงสร้าง Vector3</strong> — ใช้แทนตำแหน่ง (x, y, z) และทิศทางใน Unity</li>
+                </ul>
+                <div class="code-block">
+                    <span class="comment">// ตัวอย่าง C# ใน Unity: เคลื่อนที่วัตถุ</span><br>
+                    <span class="keyword">void</span> <span class="func">Update</span>() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Vector3 direction = <span class="keyword">new</span> Vector3(1, 0, 0);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;transform.position += direction * speed * Time.deltaTime;<br>
+                    }
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem;">✅ ใน Part 3 เราจะใช้ Unity + C# เพื่อให้ Cube เคลื่อนที่ด้วยเวกเตอร์</p>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์ 7: Part 1 จุดประสงค์ (เดิมสไลด์ 3) ====== -->
+        <div class="slide" data-index="6">
+            <div class="slide-counter">7 / 24</div>
+            <h2 class="slide-title">Part 1: GeoGebra Concept Exercise</h2>
+            <p class="slide-subtitle">เวลา 15-20 นาที</p>
+            <div class="slide-content">
+                <p><strong>จุดประสงค์</strong> หลังทำกิจกรรมนี้ นักศึกษาควรอธิบายได้ว่า</p>
+                <ul class="feature-list">
+                    <li>เวกเตอร์มีขนาดและทิศทาง</li>
+                    <li>เวกเตอร์ \([2, 4]\) หมายถึงเคลื่อนที่ตามแกน x 2 หน่วย และแกน y 4 หน่วย</li>
+                    <li>การบวกเวกเตอร์คือการรวมการเคลื่อนที่</li>
+                    <li>การคูณเวกเตอร์ด้วยสเกลาร์ทำให้เวกเตอร์ยาวขึ้น สั้นลง หรือกลับทิศทาง</li>
+                </ul>
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <p><strong>🛠 เครื่องมือ:</strong> เปิด <a href="https://www.geogebra.org/calculator" target="_blank" style="color:#fbbf24;">GeoGebra Graphing Calculator</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 1.1 -->
+        <div class="slide" data-index="7">
+            <div class="slide-counter">8 / 24</div>
+            <h2 class="slide-title">กิจกรรม 1.1: สร้างเวกเตอร์จากจุดสองจุด</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong></p>
+                <ol class="step-list">
+                    <li>เปิด GeoGebra</li>
+                    <li>สร้างจุด \(A = (0, 0)\)</li>
+                    <li>สร้างจุด \(B = (2, 4)\)</li>
+                    <li>สร้างเวกเตอร์ \(\overrightarrow{AB}\)</li>
+                    <li>สังเกตทิศทางและความยาว</li>
+                </ol>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>เวกเตอร์ \(\overrightarrow{AB}\) เคลื่อนที่ไปทางแกน x กี่หน่วย?</li>
+                    <li>เวกเตอร์ \(\overrightarrow{AB}\) เคลื่อนที่ไปทางแกน y กี่หน่วย?</li>
+                    <li>เวกเตอร์นี้เขียนในรูป list ได้อย่างไร?</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong></p>
+                <div class="code-block">
+                    \(\overrightarrow{AB} = [2, 4]\) หมายถึงไปทางแกน x 2 หน่วย และแกน y 4 หน่วย
+                </div>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 1.2 -->
+        <div class="slide" data-index="8">
+            <div class="slide-counter">9 / 24</div>
+            <h2 class="slide-title">กิจกรรม 1.2: เปลี่ยนตำแหน่งปลายเวกเตอร์</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> เปลี่ยนจุด B เป็น \(B = (3, 5)\) แล้วสังเกตเวกเตอร์ใหม่</p>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>เวกเตอร์ใหม่คืออะไร?</li>
+                    <li>เวกเตอร์ใหม่ยาวขึ้นหรือสั้นลงเมื่อเทียบกับ \([2, 4]\)?</li>
+                    <li>ทิศทางเปลี่ยนหรือไม่?</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong></p>
+                <p>\(\overrightarrow{AB} = [3, 5]\) เวกเตอร์เปลี่ยนทั้งขนาดและทิศทางเล็กน้อย เพราะค่าตามแกน x และ y เปลี่ยน</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 1.3 -->
+        <div class="slide" data-index="9">
+            <div class="slide-counter">10 / 24</div>
+            <h2 class="slide-title">กิจกรรม 1.3: การบวกเวกเตอร์</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> สร้างเวกเตอร์ \(u = [2, 4]\) และ \(v = [3, 1]\) จากนั้นสร้างผลบวก \(u+v\)</p>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>ผลบวกของเวกเตอร์คืออะไร?</li>
+                    <li>ถ้าคิดแบบการเคลื่อนที่ หมายความว่าอย่างไร?</li>
+                    <li>ผลลัพธ์สุดท้ายอยู่ที่จุดใด ถ้าเริ่มจาก \((0,0)\)?</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong></p>
+                <div class="code-block">
+                    \(u+v = [2+3, 4+1] = [5, 5]\)<br>
+                    ถ้าเริ่มจาก (0,0) จะไปสิ้นสุดที่จุด (5,5)
+                </div>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 1.4 -->
+        <div class="slide" data-index="10">
+            <div class="slide-counter">11 / 24</div>
+            <h2 class="slide-title">กิจกรรม 1.4: การคูณเวกเตอร์ด้วยสเกลาร์</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> ใช้ \(u = [2, 4]\) แล้วสร้าง \(2u, 0.5u, -u\)</p>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>\(2u\) มีขนาดเปลี่ยนอย่างไร?</li>
+                    <li>\(0.5u\) มีขนาดเปลี่ยนอย่างไร?</li>
+                    <li>\(-u\) มีทิศทางอย่างไร?</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong></p>
+                <div class="code-block">
+                    \(2u = [4, 8]\) ยาวขึ้น 2 เท่า<br>
+                    \(0.5u = [1, 2]\) สั้นลงครึ่งหนึ่ง<br>
+                    \(-u = [-2, -4]\) มีทิศทางตรงข้ามกับเวกเตอร์เดิม
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2: จุดประสงค์ -->
+        <div class="slide" data-index="11">
+            <div class="slide-counter">12 / 24</div>
+            <h2 class="slide-title">Part 2: Python / Data Science</h2>
+            <p class="slide-subtitle">เวลา 20-25 นาที</p>
+            <div class="slide-content">
+                <p><strong>จุดประสงค์</strong> หลังทำกิจกรรมนี้ นักศึกษาควรอธิบายได้ว่า</p>
+                <ul class="feature-list">
+                    <li>เวกเตอร์ใน Python สามารถแทนข้อมูลหนึ่งรายการได้</li>
+                    <li>NumPy array ใช้แทนเวกเตอร์ได้</li>
+                    <li>สามารถบวกเวกเตอร์ คำนวณ dot product และหาขนาดของเวกเตอร์ได้</li>
+                    <li>เวกเตอร์ใน Data Science มักใช้เป็น feature vector</li>
+                </ul>
+                <div class="highlight-box" style="margin-top: 0.8rem;">
+                    <p><strong>🐍 เกร็ดความรู้: Python & NumPy</strong><br>
+                    Python เป็นภาษาโปรแกรมที่นิยมใน Data Science <br>
+                    NumPy เป็นไลบรารีสำหรับคำนวณเวกเตอร์ เมทริกซ์ และการดำเนินการเชิงตัวเลข มีประสิทธิภาพสูง</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 2.1 -->
+        <div class="slide" data-index="12">
+            <div class="slide-counter">13 / 24</div>
+            <h2 class="slide-title">กิจกรรม 2.1: สร้างเวกเตอร์ข้อมูลนักศึกษา</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> รันโค้ดต่อไปนี้ใน Colab หรือ Jupyter</p>
+                <div class="code-block">
+                    <span class="keyword">import</span> numpy <span class="keyword">as</span> np<br>
+                    student = np.array([70, 165, 3, 85])<br>
+                    <span class="func">print</span>(student)
+                </div>
+                <p>โดยกำหนดให้ข้อมูลหมายถึง [น้ำหนัก, ส่วนสูง, จำนวนวิชา, คะแนนสอบ]</p>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>เวกเตอร์นี้มีทั้งหมดกี่ค่า?</li>
+                    <li>ค่า 165 หมายถึงอะไร?</li>
+                    <li>ค่า 85 หมายถึงอะไร?</li>
+                    <li>เวกเตอร์นี้แทนการเคลื่อนที่หรือแทนข้อมูล?</li>
+                    <li><span style="color:#fbbf24;">(เพิ่มเติม)</span> ถ้าเราต้องการเปลี่ยนน้ำหนักเป็น 75 และส่วนสูงเป็น 170 จงเขียนเวกเตอร์ใหม่</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong></p>
+                <p>เวกเตอร์นี้มี 4 ค่า ค่า 165 หมายถึงส่วนสูง ค่า 85 หมายถึงคะแนนสอบ เวกเตอร์นี้แทนข้อมูล<br>
+                เวกเตอร์ใหม่: [75, 170, 3, 85]</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 2.2 -->
+        <div class="slide" data-index="13">
+            <div class="slide-counter">14 / 24</div>
+            <h2 class="slide-title">กิจกรรม 2.2: เปรียบเทียบข้อมูลนักศึกษา 2 คน</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                    student_a = np.array([70, 165, 3, 85])<br>
+                    student_b = np.array([60, 160, 4, 90])<br>
+                    <span class="func">print</span>(<span class="string">"Student A:"</span>, student_a)<br>
+                    <span class="func">print</span>(<span class="string">"Student B:"</span>, student_b)
+                </div>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>นักศึกษาคนที่ A มีคะแนนสอบเท่าไร?</li>
+                    <li>นักศึกษาคนที่ B ลงทะเบียนกี่วิชา?</li>
+                    <li>เวกเตอร์ทั้งสองมีจำนวนมิติเท่ากันหรือไม่?</li>
+                    <li>ทำไมจำนวนมิติของเวกเตอร์ต้องเท่ากันเมื่อต้องการนำมาบวกกัน?</li>
+                    <li><span style="color:#fbbf24;">(เพิ่มเติม)</span> ถ้านักศึกษา C มีเวกเตอร์ [65, 175, 3, 95] จงเปรียบเทียบกับ A และ B (คะแนน, น้ำหนัก)</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong> Student A คะแนน 85, Student B ลง 4 วิชา, ทั้งสองมี 4 มิติเท่ากัน, ถ้าบวกต้องบวกที่ตำแหน่งเดียวกัน ดังนั้นมิติต้องเท่ากัน<br>
+                Student C มีน้ำหนัก 65, สูง 175, เรียน 3 วิชา, คะแนน 95 (สูงกว่า A และ B)</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 2.3 -->
+        <div class="slide" data-index="14">
+            <div class="slide-counter">15 / 24</div>
+            <h2 class="slide-title">กิจกรรม 2.3: การบวกเวกเตอร์ด้วย NumPy</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                    a = np.array([2, 4])<br>
+                    b = np.array([3, 5])<br>
+                    result = a + b<br>
+                    <span class="func">print</span>(result)
+                </div>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>ผลลัพธ์คืออะไร?</li>
+                    <li>ผลลัพธ์เหมือนกับที่เห็นใน GeoGebra หรือไม่?</li>
+                    <li>การบวกนี้เป็นการบวกแบบ component-wise หรือไม่?</li>
+                    <li><span style="color:#fbbf24;">(เพิ่มเติม)</span> จงทดลองบวกเวกเตอร์ \(c = [1,2,3]\) และ \(d = [4,5,6]\) ด้วย NumPy แล้วแสดงผล</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong> \([2,4] + [3,5] = [5,9]\) ใช่ เป็นการบวกทีละตำแหน่ง<br>
+                \(c+d = [5,7,9]\)</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 2.4 -->
+        <div class="slide" data-index="15">
+            <div class="slide-counter">16 / 24</div>
+            <h2 class="slide-title">กิจกรรม 2.4: Dot Product และ Magnitude</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                    x = np.array([3, 4])<br>
+                    y = np.array([1, 2])<br>
+                    dot = np.dot(x, y)<br>
+                    mag_x = np.linalg.norm(x)<br>
+                    <span class="func">print</span>(<span class="string">"Dot:"</span>, dot)<br>
+                    <span class="func">print</span>(<span class="string">"Magnitude x:"</span>, mag_x)
+                </div>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>ค่า dot product เท่ากับเท่าไร?</li>
+                    <li>ขนาดของ \(x = [3,4]\) เท่ากับเท่าไร?</li>
+                    <li>ทำไมขนาดของ \([3,4]\) จึงเท่ากับ 5?</li>
+                    <li>Dot product ให้ผลลัพธ์เป็น scalar หรือ vector?</li>
+                    <li><span style="color:#fbbf24;">(เพิ่มเติม)</span> จงหาขนาดของเวกเตอร์ \([1,2,3]\) และ \([4,5,6]\) และ dot product ของทั้งคู่</li>
+                </ul>
+                <p><strong>คำตอบที่คาดหวัง:</strong> \(x\cdot y = 3(1)+4(2)=11\), \(|x| = \sqrt{3^2+4^2}=5\), dot ให้ scalar<br>
+                \(|[1,2,3]| = \sqrt{14}\), \(|[4,5,6]| = \sqrt{77}\), dot = 1*4+2*5+3*6 = 32</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 2.5 -->
+        <div class="slide" data-index="16">
+            <div class="slide-counter">17 / 24</div>
+            <h2 class="slide-title">กิจกรรม 2.5: Mini Challenge</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> สร้างเวกเตอร์ของตนเอง 2 ตัว เช่น \(a = [4, 2]\), \(b = [1, 6]\)</p>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>จงคำนวณ \(a+b\), \(a-b\), \(2a\), \(-b\) ด้วย NumPy</li>
+                    <li>จงคำนวณ \(a\cdot b\) (dot product) และ \(|a|\), \(|b|\)</li>
+                    <li><span style="color:#fbbf24;">(เพิ่มเติม)</span> ถ้า \(a = [4,2]\) และ \(b = [1,6]\) จงหาเวกเตอร์ \(a+b\), \(a-b\), \(2a\), \(-b\) ด้วยมือแล้วเปรียบเทียบกับผลลัพธ์จาก NumPy</li>
+                    <li><span style="color:#fbbf24;">(เพิ่มเติม)</span> สร้างเวกเตอร์สุ่ม 2 ตัว (ขนาด 4 มิติ) แล้วคำนวณผลบวก ผลต่าง ดอทโปรดัก และขนาด</li>
+                </ul>
+                <p><strong>คำตอบตัวอย่าง:</strong></p>
+                <div class="code-block">
+                    a + b = [5, 8]<br>
+                    a - b = [3, -4]<br>
+                    2a = [8, 4]<br>
+                    -b = [-1, -6]<br>
+                    a·b = 4(1)+2(6) = 16<br>
+                    |a| = √(4²+2²) = √20,  |b| = √(1²+6²) = √37
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 3: จุดประสงค์ -->
+        <div class="slide" data-index="17">
+            <div class="slide-counter">18 / 24</div>
+            <h2 class="slide-title">Part 3: Unity / Game Development</h2>
+            <p class="slide-subtitle">เวลา 20-25 นาที</p>
+            <div class="slide-content">
+                <p><strong>จุดประสงค์</strong> หลังทำกิจกรรมนี้ นักศึกษาควรอธิบายได้ว่า</p>
+                <ul class="feature-list">
+                    <li>Vector3 ใช้แทนตำแหน่งหรือทิศทางใน Unity</li>
+                    <li>การบวกเวกเตอร์สามารถใช้เปลี่ยนตำแหน่งวัตถุได้</li>
+                    <li>Vector3(1, 0, 0) หมายถึงการเคลื่อนที่ตามแกน x</li>
+                    <li>แนวคิดเวกเตอร์ใน Unity เชื่อมโยงกับ GeoGebra และ Python ได้</li>
+                </ul>
+                <div class="highlight-box" style="margin-top: 0.8rem;">
+                    <p><strong>🎮 เกร็ดความรู้: Unity & C#</strong><br>
+                    Unity เป็นเกมเอนจินยอดนิยม ใช้ภาษา C# ในการเขียนสคริปต์ <br>
+                    <strong>Vector3</strong> เป็นโครงสร้างข้อมูลสำหรับเวกเตอร์ 3 มิติ (x, y, z) ใช้แทนตำแหน่ง ทิศทาง และความเร็ว</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 3.1 -->
+        <div class="slide" data-index="18">
+            <div class="slide-counter">19 / 24</div>
+            <h2 class="slide-title">กิจกรรม 3.1: เข้าใจ Vector3</h2>
+            <div class="slide-content">
+                <p>ใน Unity เวกเตอร์ 3 มิติใช้รูปแบบ <code>Vector3(x, y, z)</code></p>
+                <ul class="feature-list">
+                    <li><strong>x</strong>: ซ้าย-ขวา</li>
+                    <li><strong>y</strong>: ขึ้น-ลง</li>
+                    <li><strong>z</strong>: หน้า-หลัง</li>
+                </ul>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>Vector3(1, 0, 0) หมายถึงทิศทางใด?</li>
+                    <li>Vector3(0, 1, 0) หมายถึงทิศทางใด?</li>
+                    <li>Vector3(0, 0, 1) หมายถึงทิศทางใด?</li>
+                </ul>
+                <p><strong>คำตอบ:</strong> Vector3(1,0,0) = แกน x, (0,1,0) = แกน y, (0,0,1) = แกน z</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 3.2 -->
+        <div class="slide" data-index="19">
+            <div class="slide-counter">20 / 24</div>
+            <h2 class="slide-title">กิจกรรม 3.2: สร้างสคริปต์ให้วัตถุเคลื่อนที่</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong></p>
+                <ol class="step-list">
+                    <li>สร้าง Cube ใน Unity</li>
+                    <li>สร้าง C# Script ชื่อ <code>VectorMoveDemo</code></li>
+                    <li>ใส่โค้ดนี้:</li>
+                </ol>
+                <div class="code-block">
+                    <span class="keyword">using</span> UnityEngine;<br>
+                    <span class="keyword">public class</span> VectorMoveDemo : MonoBehaviour {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">void</span> <span class="func">Start</span>() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vector3 moveDirection = <span class="keyword">new</span> Vector3(1, 0, 0);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transform.position = transform.position + moveDirection;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }
+                </div>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>Cube เคลื่อนที่ไปทางแกนใด?</li>
+                    <li>ตำแหน่งใหม่เปลี่ยนจากเดิมอย่างไร?</li>
+                    <li>บรรทัด <code>transform.position = transform.position + moveDirection;</code> หมายความว่าอะไร?</li>
+                </ul>
+                <p><strong>คำตอบ:</strong> เคลื่อนที่ทางแกน x 1 หน่วย, บรรทัดนี้หมายถึง ตำแหน่งใหม่ = ตำแหน่งเดิม + เวกเตอร์การเคลื่อนที่</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 3.3 -->
+        <div class="slide" data-index="20">
+            <div class="slide-counter">21 / 24</div>
+            <h2 class="slide-title">กิจกรรม 3.3: ทดลองเปลี่ยนทิศทาง</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> เปลี่ยนค่า <code>moveDirection</code> เป็น</p>
+                <ul class="feature-list">
+                    <li>รอบ 1: <code>new Vector3(0, 1, 0)</code></li>
+                    <li>รอบ 2: <code>new Vector3(0, 0, 1)</code></li>
+                    <li>รอบ 3: <code>new Vector3(1, 1, 0)</code></li>
+                </ul>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>รอบที่ 1 Cube เคลื่อนที่ไปทางใด?</li>
+                    <li>รอบที่ 2 Cube เคลื่อนที่ไปทางใด?</li>
+                    <li>รอบที่ 3 Cube เคลื่อนที่แบบใด?</li>
+                    <li>ค่า Vector3(1,1,0) คล้ายกับการบวกเวกเตอร์ใน GeoGebra อย่างไร?</li>
+                </ul>
+                <p><strong>คำตอบ:</strong> รอบ 1 ขึ้น (y), รอบ 2 หน้า (z), รอบ 3 แนวทแยงระหว่าง x และ y, คล้ายกับการบวกเวกเตอร์ (1,0,0)+(0,1,0) = (1,1,0)</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 3.4 -->
+        <div class="slide" data-index="21">
+            <div class="slide-counter">22 / 24</div>
+            <h2 class="slide-title">กิจกรรม 3.4: เคลื่อนที่ต่อเนื่องด้วย Time.deltaTime</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                    <span class="keyword">using</span> UnityEngine;<br>
+                    <span class="keyword">public class</span> VectorMoveDemo : MonoBehaviour {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public float</span> speed = 2.0f;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">void</span> <span class="func">Update</span>() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vector3 moveDirection = <span class="keyword">new</span> Vector3(1, 0, 0);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transform.position += moveDirection * speed * Time.deltaTime;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }
+                </div>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li><code>Update()</code> ต่างจาก <code>Start()</code> อย่างไร?</li>
+                    <li><code>speed</code> มีหน้าที่อะไร?</li>
+                    <li><code>Time.deltaTime</code> ช่วยเรื่องอะไร?</li>
+                    <li>ถ้าเปลี่ยน speed จาก 2 เป็น 5 จะเกิดอะไรขึ้น?</li>
+                </ul>
+                <p><strong>คำตอบ:</strong> Start() ทำงานครั้งเดียว, Update() ทำงานทุก frame, speed ควบคุมความเร็ว, Time.deltaTime ทำให้เคลื่อนที่ราบรื่นและสัมพันธ์กับเวลา, ถ้าเพิ่ม speed วัตถุจะเคลื่อนที่เร็วขึ้น</p>
+            </div>
+        </div>
+
+        <!-- กิจกรรม 3.5 -->
+        <div class="slide" data-index="22">
+            <div class="slide-counter">23 / 24</div>
+            <h2 class="slide-title">กิจกรรม 3.5: Mini Challenge</h2>
+            <div class="slide-content">
+                <p><strong>คำสั่ง:</strong> แก้โค้ดเพื่อให้ Cube เคลื่อนที่แนวทแยงไปข้างหน้าและขวา ใช้ <code>Vector3 moveDirection = new Vector3(1, 0, 1);</code></p>
+                <p><strong>คำถาม:</strong></p>
+                <ul class="feature-list">
+                    <li>Cube เคลื่อนที่ตามแกนใดบ้าง?</li>
+                    <li>ถ้าต้องการให้ Cube เคลื่อนที่ขึ้นด้วย ต้องเปลี่ยนเป็นเวกเตอร์อะไร?</li>
+                    <li>ถ้าต้องการให้ Cube เคลื่อนที่กลับทิศทาง ต้องทำอย่างไร?</li>
+                </ul>
+                <p><strong>คำตอบ:</strong> เคลื่อนที่ตามแกน x และ z (แนวทแยง), ถ้าต้องการขึ้นด้วย ใช้ (1,1,1) หรือ (1,1,0) ตามต้องการ, กลับทิศทางโดยใช้ค่าลบ เช่น (-1,0,0)</p>
+                <div class="highlight-box" style="margin-top: 1rem;">
+                    <p><strong>💡 สรุป:</strong> การใช้เวกเตอร์ใน Unity ช่วยให้ควบคุมการเคลื่อนที่ของวัตถุได้อย่างยืดหยุ่น คล้ายกับที่เราเรียนรู้ใน GeoGebra และ Python</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== สไลด์สุดท้าย: เครดิต ====== -->
+        <div class="slide" data-index="23">
+            <div class="slide-counter">24 / 24</div>
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 80%; text-align: center;">
+                <h2 class="slide-title" style="font-size: 2.8rem;">ขอบคุณที่เรียน!</h2>
+                <p style="font-size: 1.4rem; color: #94a3b8; margin-top: 1rem;">แบบฝึกหัดนี้ครอบคลุมเวกเตอร์ใน 3 มิติ<br>ทั้งคณิตศาสตร์ วิทยาการข้อมูล และการพัฒนาเกม</p>
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 1.5rem; width: 80%; max-width: 500px;">
+                    <p style="color: #fbbf24; font-weight: 600;">📌 จัดทำโดย</p>
+                    <p style="font-size: 1.8rem; font-weight: 700; color: #fff;">deepseek.com</p>
+                    <p style="color: #94a3b8; margin-top: 0.5rem;">แหล่งข้อมูลเพิ่มเติม: <a href="https://www.geogebra.org" target="_blank" style="color: #60a5fa;">GeoGebra</a> · <a href="https://numpy.org" target="_blank" style="color: #60a5fa;">NumPy</a> · <a href="https://unity.com" target="_blank" style="color: #60a5fa;">Unity</a></p>
+                    <p style="color: #64748b; margin-top: 0.5rem; font-size: 0.9rem;">สไลด์แนะนำ Python, Colab, Unity และ C#</p>
+                </div>
+                <p style="margin-top: 2rem; color: #64748b; font-size: 0.9rem;">กดลูกศรหรือปุ่มนำทางเพื่อทบทวนอีกครั้ง</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn">◀</button>
+        <div class="nav-dots" id="dotsContainer"></div>
+        <button class="nav-btn" id="nextBtn">▶</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+        let current = 0;
+        let transitioning = false;
+        const dotsContainer = document.getElementById('dotsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // create dots
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.dataset.index = i;
+            dot.addEventListener('click', () => goTo(i));
+            dotsContainer.appendChild(dot);
+        }
+        const dots = document.querySelectorAll('.dot');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === current));
+            dots.forEach((d, i) => d.classList.toggle('active', i === current));
+            slides.forEach((s, i) => {
+                const c = s.querySelector('.slide-counter');
+                if (c) c.textContent = `${i+1} / ${total}`;
+            });
+        }
+
+        function goTo(index) {
+            if (transitioning) return;
+            if (index < 0) index = 0;
+            if (index >= total) index = total - 1;
+            if (index === current) return;
+            transitioning = true;
+            current = index;
+            updateUI();
+            setTimeout(() => { transitioning = false; }, 500);
+        }
+
+        function next() { goTo(current + 1); }
+        function prev() { goTo(current - 1); }
+
+        prevBtn.addEventListener('click', prev);
+        nextBtn.addEventListener('click', next);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault(); next();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault(); prev();
+            } else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+            else if (e.key === 'End') { e.preventDefault(); goTo(total-1); }
+        });
+
+        let startX = 0, startY = 0;
+        const wrapper = document.querySelector('.slides-wrapper');
+        wrapper.addEventListener('touchstart', (e) => {
+            startX = e.changedTouches[0].screenX;
+            startY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        wrapper.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].screenX;
+            const endY = e.changedTouches[0].screenY;
+            const dx = endX - startX, dy = endY - startY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                if (dx < 0) next(); else prev();
+            }
+        }, { passive: true });
+
+        updateUI();
+    })();
+</script>
+</body>
+</html>
