@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basis vectors ไม่จำเป็นต้องตั้งฉากกันเสมอไป</title>
+    <!-- Font Awesome (optional) & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: linear-gradient(145deg, #f6f9fc 0%, #e6f0f5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .slide-container {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 20, 30, 0.25), 0 8px 16px rgba(0,0,0,0.1);
+            padding: 2rem 2rem 1.5rem;
+            transition: 0.3s;
+        }
+
+        /* slide header */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 80, 120, 0.2);
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        .slide-header h1 {
+            font-weight: 600;
+            font-size: 1.9rem;
+            color: #0a2a3b;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .slide-header h1 i {
+            color: #1f7a8c;
+            font-size: 2rem;
+        }
+
+        .slide-counter {
+            background: #1f4b5e;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* slide content */
+        .slide-content {
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.5rem 0.2rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media (max-width: 720px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+        }
+
+        .text-card {
+            background: white;
+            padding: 1.8rem 2rem;
+            border-radius: 2.5rem;
+            box-shadow: 0 10px 20px rgba(0, 20, 30, 0.08);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .text-card h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #0b3b4f;
+            margin-bottom: 0.7rem;
+        }
+
+        .text-card h2 i {
+            color: #2d8f9e;
+            margin-right: 8px;
+        }
+
+        .highlight-math {
+            background: #eef7fa;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #005073;
+        }
+
+        .math-block {
+            background: #e2f0f5;
+            padding: 0.8rem 1.2rem;
+            border-radius: 20px;
+            margin: 0.8rem 0;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .matrix-badge {
+            background: #d9eaf2;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .det-example {
+            background: #dce9f0;
+            border-left: 6px solid #1e7e8f;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            margin: 0.8rem 0;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.8rem 0;
+            font-size: 1rem;
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+
+        .summary-table th {
+            background: #1f5f72;
+            color: white;
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+
+        .summary-table td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid #d0e2ea;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-yes {
+            background: #1d7a5e;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .badge-no {
+            background: #a6534b;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .visual-vectors {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffffcc;
+            backdrop-filter: blur(2px);
+            padding: 1.5rem 0.8rem;
+            border-radius: 2.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .vector-canvas-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        canvas {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            background: #fafdff;
+            border-radius: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 20, 30, 0.1);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .vector-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            margin-top: 0.8rem;
+            font-weight: 500;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .color-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 0.6rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0a3442;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #c7dae3;
+        }
+
+        .nav-btn:hover {
+            background: #e3f0f7;
+            box-shadow: 0 8px 16px rgba(0, 30, 50, 0.1);
+            transform: scale(0.97);
+        }
+
+        .nav-btn:active {
+            background: #c0dae7;
+        }
+
+        .nav-btn i {
+            font-size: 1.2rem;
+        }
+
+        .page-indicator {
+            font-weight: 500;
+            color: #1f5a6b;
+            background: rgba(255,255,255,0.6);
+            padding: 0.2rem 1.4rem;
+            border-radius: 60px;
+        }
+
+        .footnote {
+            text-align: center;
+            margin-top: 1.2rem;
+            color: #2a5f72;
+            font-weight: 400;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .quote-box {
+            background: #d4e9f0;
+            padding: 1.2rem 1.8rem;
+            border-radius: 60px 20px 60px 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #003349;
+            text-align: center;
+            margin: 0.8rem 0;
+        }
+
+        .slide-content {
+            transition: opacity 0.2s ease;
+        }
+
+        /* responsive tweaks */
+        @media (max-width: 480px) {
+            .slide-container { padding: 1.2rem; }
+            .text-card { padding: 1.2rem; }
+            .slide-header h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container" id="app">
+    <!-- header -->
+    <div class="slide-header">
+        <h1><i class="fas fa-vector-square"></i> Basis vectors</h1>
+        <span class="slide-counter" id="slideCounter">1 / 3</span>
+    </div>
+
+    <!-- slide content injected here -->
+    <div class="slide-content" id="slideContent">
+        <!-- dynamic content from js -->
+    </div>
+
+    <!-- navigation -->
+    <div class="btn-group">
+        <button class="nav-btn" id="prevSlide"><i class="fas fa-chevron-left"></i> ก่อนหน้า</button>
+        <span class="page-indicator" id="pageIndicator">● ○ ○</span>
+        <button class="nav-btn" id="nextSlide">ถัดไป <i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="footnote">
+        <i class="fas fa-lightbulb"></i>  basis vectors ต้องเป็นอิสระต่อกัน และ span ได้ทั้ง space
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- SLIDE DATA ----------
+        const slides = [
+            // Slide 1: เงื่อนไข + det
+            {
+                title: 'เงื่อนไขสำคัญของ basis',
+                content: `
+                    <div class="card-grid">
+                        <div class="text-card">
+                            <h2><i class="fas fa-check-circle" style="color:#1e7e8f;"></i>  basis = </h2>
+                            <p style="font-size:1.2rem; font-weight:400; margin-top:0.2rem;">
+                                ชุดของเวกเตอร์ที่เป็นอิสระต่อกัน และ <strong>span</strong> ได้ทั้ง space
+                            </p>
+                            <div style="margin-top:1.2rem;">
+                                <p>สำหรับ <span class="highlight-math">ℝ²</span> ต้องมีเวกเตอร์ 2 ตัวที่:</p>
+                                <div class="math-block">det([v₁  v₂]) ≠ 0</div>
+                                <p style="margin-top:0.5rem;">✅ แปลว่าเวกเตอร์สองตัว <strong>ไม่อยู่บนเส้นตรงเดียวกัน</strong> จึงสร้างพื้นที่ 2D ได้</p>
+                            </div>
+                            <div class="det-example">
+                                <i class="fas fa-calculator" style="margin-right:6px;"></i> ดีเทอร์มิแนนต์ ≠ 0 → basis
+                            </div>
+                        </div>
+                        <div class="visual-vectors">
+                            <div class="vector-canvas-wrapper">
+                                <canvas id="canvas1" width="300" height="260"></canvas>
+                            </div>
+                            <div class="vector-legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> v₁ = (2,0)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> v₂ = (1,1)</span>
+                            </div>
+                            <p style="margin-top:0.4rem; font-size:0.9rem; opacity:0.8;">det = 2 ≠ 0 → เป็น basis</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 2: ตัวอย่าง ตั้งฉาก vs ไม่ตั้งฉาก + ตาราง
+            {
+                title: 'ตัวอย่าง basis: ตั้งฉาก & ไม่ตั้งฉาก',
+                content: `
+                    <div class="card-grid">
+                        <div class="text-card">
+                            <h2><i class="fas fa-arrow-right"></i>  ตั้งฉาก (orthogonal)</h2>
+                            <div class="math-block">e₁ = [1,0]ᵀ , e₂ = [0,1]ᵀ</div>
+                            <p>สองตัวนี้ตั้งฉากกัน และเป็น basis มาตรฐานของ ℝ²</p>
+                            <hr style="margin:1rem 0; opacity:0.2;">
+                            <h2 style="margin-top:0.5rem;"><i class="fas fa-arrows-alt-h"></i>  ไม่ตั้งฉาก</h2>
+                            <div class="math-block">v₁ = [2,0]ᵀ , v₂ = [1,1]ᵀ</div>
+                            <p>นำมาเป็นคอลัมน์ของเมทริกซ์: <span class="highlight-math">A = [[2,1],[0,1]]</span></p>
+                            <div class="det-example" style="margin-top:0.5rem;">
+                                det(A) = 2(1) − 1(0) = <strong>2 ≠ 0</strong> 
+                                <span style="margin-left:0.8rem;">✅ basis ของ ℝ²</span>
+                            </div>
+                        </div>
+                        <div class="visual-vectors">
+                            <div class="vector-canvas-wrapper">
+                                <canvas id="canvas2" width="300" height="260"></canvas>
+                            </div>
+                            <div class="vector-legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> e₁ = (1,0)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> e₂ = (0,1)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#d48c34;"></span> v₁ = (2,0)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#5f4b8b;"></span> v₂ = (1,1)</span>
+                            </div>
+                            <p style="margin-top:0.2rem; font-size:0.9rem;">ทั้งสองคู่เป็น basis แม้ไม่ตั้งฉาก</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 3: สรุปสั้น + orthonormal
+            {
+                title: 'สรุปสั้น ๆ และคำสำคัญ',
+                content: `
+                    <div class="card-grid">
+                        <div class="text-card">
+                            <h2><i class="fas fa-table"></i>  คุณสมบัติ vs basis</h2>
+                            <table class="summary-table">
+                                <thead><tr><th>คุณสมบัติ</th><th>จำเป็นสำหรับ basis?</th></tr></thead>
+                                <tbody>
+                                    <tr><td>ต้องไม่เป็นศูนย์</td><td><span class="badge-yes">จำเป็น</span></td></tr>
+                                    <tr><td>ต้องไม่อยู่เส้นเดียวกัน</td><td><span class="badge-yes">จำเป็น</span></td></tr>
+                                    <tr><td>ต้อง span ได้ทั้ง space</td><td><span class="badge-yes">จำเป็น</span></td></tr>
+                                    <tr><td>ต้องตั้งฉากกัน</td><td><span class="badge-no">ไม่จำเป็น</span></td></tr>
+                                    <tr><td>ต้องยาวเท่ากับ 1</td><td><span class="badge-no">ไม่จำเป็น</span></td></tr>
+                                </tbody>
+                            </table>
+                            <div style="margin-top:0.8rem;">
+                                <span class="matrix-badge"><i class="fas fa-arrow-right"></i>  orthogonal basis: ตั้งฉาก</span>
+                                <span class="matrix-badge" style="margin-left:0.4rem;"><i class="fas fa-arrow-right"></i>  orthonormal: ตั้งฉาก + ยาว 1</span>
+                            </div>
+                        </div>
+                        <div class="visual-vectors" style="justify-content:center;">
+                            <div class="quote-box">
+                                <i class="fas fa-quote-left" style="margin-right:6px;"></i>
+                                Basis vectors do not have to be perpendicular. <br>
+                                They only need to be independent and able to span the space.
+                            </div>
+                            <div style="background:#e2eef5; border-radius:2rem; padding:1rem 1.5rem; margin-top:0.5rem; width:100%;">
+                                <p style="font-weight:500;"><i class="fas fa-check-circle" style="color:#1f7a5e;"></i>  ตัวอย่าง: v₁=(2,0), v₂=(1,1)  independent → basis</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        // DOM elements
+        const slideContent = document.getElementById('slideContent');
+        const slideCounter = document.getElementById('slideCounter');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const prevBtn = document.getElementById('prevSlide');
+        const nextBtn = document.getElementById('nextSlide');
+
+        // ----- helper to draw on canvas (both canvas1 & canvas2) -----
+        function drawVectors(canvasId, vectors, labels, colors, grid = true) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            // background
+            ctx.fillStyle = '#fafdff';
+            ctx.fillRect(0, 0, w, h);
+
+            // grid lines
+            if (grid) {
+                ctx.strokeStyle = '#d5e3eb';
+                ctx.lineWidth = 0.8;
+                for (let i = 0; i <= 6; i++) {
+                    const x = 30 + i * 40;
+                    const y = 30 + i * 40;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 30);
+                    ctx.lineTo(x, h-30);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(30, y);
+                    ctx.lineTo(w-30, y);
+                    ctx.stroke();
+                }
+            }
+
+            // axis
+            ctx.strokeStyle = '#3a5f6b';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(30, 30);
+            ctx.lineTo(30, h-30);
+            ctx.lineTo(w-30, h-30);
+            ctx.stroke();
+            // arrow heads
+            ctx.fillStyle = '#3a5f6b';
+            ctx.beginPath();
+            ctx.moveTo(30, 25);
+            ctx.lineTo(24, 35);
+            ctx.lineTo(36, 35);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(w-25, h-30);
+            ctx.lineTo(w-35, h-24);
+            ctx.lineTo(w-35, h-36);
+            ctx.fill();
+
+            // scale: 40px = 1 unit, origin at (30, h-30)
+            const originX = 30, originY = h-30;
+            const scale = 40;
+
+            // draw vectors
+            vectors.forEach((vec, idx) => {
+                const [vx, vy] = vec;
+                const endX = originX + vx * scale;
+                const endY = originY - vy * scale;
+                const color = colors[idx] || '#000000';
+
+                ctx.beginPath();
+                ctx.moveTo(originX, originY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                // arrowhead
+                const angle = Math.atan2(originY - endY, endX - originX);
+                const headLen = 12;
+                const headAngle = 0.45;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(endX - headLen * Math.cos(angle - headAngle), endY + headLen * Math.sin(angle - headAngle));
+                ctx.lineTo(endX - headLen * Math.cos(angle + headAngle), endY + headLen * Math.sin(angle + headAngle));
+                ctx.closePath();
+                ctx.fill();
+
+                // label
+                ctx.font = 'bold 13px "Segoe UI", sans-serif';
+                ctx.fillStyle = color;
+                ctx.fillText(labels[idx] || '', endX + 6, endY - 6);
+            });
+
+            // origin label
+            ctx.fillStyle = '#1a3f4a';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('O', originX-20, originY+20);
+        }
+
+        function renderSlide(index) {
+            const slide = slides[index];
+            slideContent.innerHTML = slide.content;
+
+            // update counter + indicator
+            slideCounter.innerText = `${index+1} / ${totalSlides}`;
+            let dots = '';
+            for (let i = 0; i < totalSlides; i++) {
+                dots += (i === index) ? '●' : '○';
+                if (i < totalSlides-1) dots += ' ';
+            }
+            pageIndicator.innerText = dots;
+
+            // after content render, draw canvases if exist
+            setTimeout(() => {
+                // slide 0: canvas1 => v1=(2,0), v2=(1,1)
+                if (index === 0) {
+                    drawVectors('canvas1', 
+                        [[2,0], [1,1]], 
+                        ['v₁', 'v₂'], 
+                        ['#bc4b51', '#2b7a78'], true);
+                }
+                // slide 1: canvas2 => e1=(1,0), e2=(0,1), v1=(2,0), v2=(1,1)
+                if (index === 1) {
+                    drawVectors('canvas2', 
+                        [[1,0], [0,1], [2,0], [1,1]], 
+                        ['e₁', 'e₂', 'v₁', 'v₂'], 
+                        ['#bc4b51', '#2b7a78', '#d48c34', '#5f4b8b'], true);
+                }
+                // slide 2: no canvas, but we keep
+            }, 50);
+
+            // re-attach event listeners for canvas resize? no needed
+        }
+
+        // navigation
+        function goToSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            currentSlide = index;
+            renderSlide(currentSlide);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            goToSlide(currentSlide - 1);
+        });
+        nextBtn.addEventListener('click', () => {
+            goToSlide(currentSlide + 1);
+        });
+
+        // keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+            else if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+        });
+
+        // initial render
+        renderSlide(0);
+    })();
+</script>
+
+</body>
+</html>
