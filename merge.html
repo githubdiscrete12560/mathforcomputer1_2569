@@ -3,152 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basis vectors ไม่จำเป็นต้องตั้งฉากกันเสมอไป</title>
-    <!-- Font Awesome (optional) & Google Fonts -->
+    <title>Linear Algebra · Interactive Slides</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: linear-gradient(145deg, #f6f9fc 0%, #e6f0f5 100%);
+            background: linear-gradient(145deg, #f0f7fb 0%, #ddecf3 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 1.5rem;
         }
-
         .slide-container {
             max-width: 1100px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(6px);
             border-radius: 3rem;
-            box-shadow: 0 20px 40px rgba(0, 20, 30, 0.25), 0 8px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,20,30,0.2), 0 8px 16px rgba(0,0,0,0.08);
             padding: 2rem 2rem 1.5rem;
-            transition: 0.3s;
         }
-
-        /* slide header */
         .slide-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid rgba(0, 80, 120, 0.2);
+            border-bottom: 2px solid rgba(0,70,100,0.15);
             padding-bottom: 0.6rem;
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
-
         .slide-header h1 {
             font-weight: 600;
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             color: #0a2a3b;
-            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-
-        .slide-header h1 i {
-            color: #1f7a8c;
-            font-size: 2rem;
-        }
-
+        .slide-header h1 i { color: #1f7a8c; }
         .slide-counter {
             background: #1f4b5e;
             color: white;
-            padding: 0.4rem 1rem;
+            padding: 0.3rem 1.2rem;
             border-radius: 40px;
             font-weight: 500;
-            font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 0.95rem;
         }
-
-        /* slide content */
-        .slide-content {
-            min-height: 380px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0.5rem 0.2rem;
-        }
-
-        .card-grid {
+        .slide-content { min-height: 380px; padding: 0.2rem 0; }
+        .grid-2col {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
             align-items: center;
         }
-
-        @media (max-width: 720px) {
-            .card-grid {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-            }
-        }
-
-        .text-card {
+        @media (max-width: 720px) { .grid-2col { grid-template-columns: 1fr; gap: 1.2rem; } }
+        .text-panel {
             background: white;
-            padding: 1.8rem 2rem;
-            border-radius: 2.5rem;
-            box-shadow: 0 10px 20px rgba(0, 20, 30, 0.08);
-            border: 1px solid rgba(255,255,255,0.6);
+            padding: 1.6rem 1.8rem;
+            border-radius: 2.2rem;
+            box-shadow: 0 6px 16px rgba(0,20,30,0.05);
+            border: 1px solid rgba(255,255,255,0.5);
         }
-
-        .text-card h2 {
-            font-size: 1.8rem;
+        .text-panel h2 {
+            font-size: 1.4rem;
             font-weight: 500;
             color: #0b3b4f;
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.6rem;
         }
-
-        .text-card h2 i {
-            color: #2d8f9e;
-            margin-right: 8px;
-        }
-
-        .highlight-math {
-            background: #eef7fa;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            color: #005073;
-        }
-
         .math-block {
             background: #e2f0f5;
-            padding: 0.8rem 1.2rem;
-            border-radius: 20px;
-            margin: 0.8rem 0;
-            font-size: 1.1rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 1.5rem;
             font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 0.6rem 0;
             overflow-x: auto;
             white-space: nowrap;
         }
-
-        .matrix-badge {
-            background: #d9eaf2;
-            padding: 0.4rem 1rem;
+        .highlight {
+            background: #eef7fa;
+            padding: 0.1rem 0.6rem;
             border-radius: 30px;
-            display: inline-block;
+            font-weight: 600;
+            color: #005073;
+        }
+        .step-box {
+            background: #eaf3f8;
+            border-left: 5px solid #1f7a8c;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1.2rem;
+            margin: 0.6rem 0;
+        }
+        .canvas-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffffcc;
+            backdrop-filter: blur(2px);
+            padding: 1rem 0.4rem;
+            border-radius: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        canvas {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            background: #fafdff;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,20,30,0.06);
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.6rem;
+            flex-wrap: wrap;
             font-weight: 500;
+            font-size: 0.9rem;
         }
-
-        .det-example {
-            background: #dce9f0;
-            border-left: 6px solid #1e7e8f;
-            padding: 1rem 1.5rem;
-            border-radius: 1.5rem;
-            margin: 0.8rem 0;
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
-
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 6px;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .nav-btn {
+            background: white;
+            border: 1px solid #c7dae3;
+            padding: 0.5rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #0a3442;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .nav-btn:hover { background: #e3f0f7; transform: scale(0.97); }
+        .page-indicator {
+            font-weight: 500;
+            color: #1f5a6b;
+            background: rgba(255,255,255,0.6);
+            padding: 0.2rem 1.4rem;
+            border-radius: 60px;
+        }
+        .footnote {
+            text-align: center;
+            margin-top: 1rem;
+            color: #2a5f72;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .inline-math {
+            background: #e4eff6;
+            padding: 0.1rem 0.7rem;
+            border-radius: 30px;
+            font-family: 'Courier New', monospace;
+        }
+        .badge-yes { background: #1d7a5e; color: white; padding: 0.2rem 1rem; border-radius: 40px; font-weight: 600; font-size: 0.8rem; }
+        .badge-no { background: #a6534b; color: white; padding: 0.2rem 1rem; border-radius: 40px; font-weight: 600; font-size: 0.8rem; }
         .summary-table {
             width: 100%;
             border-collapse: collapse;
@@ -158,148 +189,10 @@
             border-radius: 1.5rem;
             overflow: hidden;
         }
-
-        .summary-table th {
-            background: #1f5f72;
-            color: white;
-            padding: 0.6rem 0.8rem;
-            text-align: left;
-        }
-
-        .summary-table td {
-            padding: 0.6rem 0.8rem;
-            border-bottom: 1px solid #d0e2ea;
-        }
-
-        .summary-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge-yes {
-            background: #1d7a5e;
-            color: white;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        .badge-no {
-            background: #a6534b;
-            color: white;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        .visual-vectors {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #ffffffcc;
-            backdrop-filter: blur(2px);
-            padding: 1.5rem 0.8rem;
-            border-radius: 2.5rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-
-        .vector-canvas-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        canvas {
-            max-width: 280px;
-            width: 100%;
-            height: auto;
-            background: #fafdff;
-            border-radius: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 20, 30, 0.1);
-            border: 1px solid rgba(0,0,0,0.03);
-        }
-
-        .vector-legend {
-            display: flex;
-            justify-content: center;
-            gap: 1.8rem;
-            margin-top: 0.8rem;
-            font-weight: 500;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .color-dot {
-            width: 18px;
-            height: 18px;
-            border-radius: 6px;
-        }
-
-        .btn-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 2rem;
-            padding-top: 0.8rem;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .nav-btn {
-            background: white;
-            border: none;
-            padding: 0.6rem 1.6rem;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
-            color: #0a3442;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #c7dae3;
-        }
-
-        .nav-btn:hover {
-            background: #e3f0f7;
-            box-shadow: 0 8px 16px rgba(0, 30, 50, 0.1);
-            transform: scale(0.97);
-        }
-
-        .nav-btn:active {
-            background: #c0dae7;
-        }
-
-        .nav-btn i {
-            font-size: 1.2rem;
-        }
-
-        .page-indicator {
-            font-weight: 500;
-            color: #1f5a6b;
-            background: rgba(255,255,255,0.6);
-            padding: 0.2rem 1.4rem;
-            border-radius: 60px;
-        }
-
-        .footnote {
-            text-align: center;
-            margin-top: 1.2rem;
-            color: #2a5f72;
-            font-weight: 400;
-            font-size: 0.95rem;
-            opacity: 0.8;
-        }
-
+        .summary-table th { background: #1f5f72; color: white; padding: 0.6rem 0.8rem; text-align: left; }
+        .summary-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #d0e2ea; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .matrix-badge { background: #d9eaf2; padding: 0.3rem 1rem; border-radius: 30px; display: inline-block; font-weight: 500; }
         .quote-box {
             background: #d4e9f0;
             padding: 1.2rem 1.8rem;
@@ -310,72 +203,114 @@
             text-align: center;
             margin: 0.8rem 0;
         }
-
-        .slide-content {
-            transition: opacity 0.2s ease;
+        .weight-control {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1rem 0;
         }
-
-        /* responsive tweaks */
-        @media (max-width: 480px) {
-            .slide-container { padding: 1.2rem; }
-            .text-card { padding: 1.2rem; }
-            .slide-header h1 { font-size: 1.4rem; }
+        .weight-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f0f7fb;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
         }
+        .weight-row label { font-weight: 600; min-width: 1.8rem; color: #0f4155; }
+        .weight-row input[type="range"] { flex: 1; accent-color: #1f7a8c; height: 6px; border-radius: 10px; background: #c5d9e6; }
+        .weight-row .value-badge {
+            background: white;
+            padding: 0.1rem 0.9rem;
+            border-radius: 40px;
+            font-weight: 600;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+        .result-vector {
+            background: #e2eef5;
+            padding: 0.6rem 1rem;
+            border-radius: 60px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 0.6rem;
+        }
+        .result-vector strong { background: white; padding: 0.1rem 1rem; border-radius: 40px; margin: 0 0.3rem; }
     </style>
 </head>
 <body>
 
 <div class="slide-container" id="app">
-    <!-- header -->
     <div class="slide-header">
-        <h1><i class="fas fa-vector-square"></i> Basis vectors</h1>
-        <span class="slide-counter" id="slideCounter">1 / 3</span>
+        <h1><i class="fas fa-vector-square"></i> Linear Algebra</h1>
+        <span class="slide-counter" id="slideCounter">1 / 7</span>
     </div>
-
-    <!-- slide content injected here -->
-    <div class="slide-content" id="slideContent">
-        <!-- dynamic content from js -->
-    </div>
-
-    <!-- navigation -->
+    <div class="slide-content" id="slideContent"></div>
     <div class="btn-group">
         <button class="nav-btn" id="prevSlide"><i class="fas fa-chevron-left"></i> ก่อนหน้า</button>
-        <span class="page-indicator" id="pageIndicator">● ○ ○</span>
+        <span class="page-indicator" id="pageIndicator">● ○ ○ ○ ○ ○ ○</span>
         <button class="nav-btn" id="nextSlide">ถัดไป <i class="fas fa-chevron-right"></i></button>
     </div>
-    <div class="footnote">
-        <i class="fas fa-lightbulb"></i>  basis vectors ต้องเป็นอิสระต่อกัน และ span ได้ทั้ง space
-    </div>
+    <div class="footnote"><i class="fas fa-lightbulb"></i> basis vectors ต้องเป็นอิสระต่อกัน และ span ได้ทั้ง space</div>
 </div>
 
 <script>
     (function() {
-        // ---------- SLIDE DATA ----------
+        // ---------- SLIDE DEFINITIONS ----------
         const slides = [
-            // Slide 1: เงื่อนไข + det
+            // 0: มาตรฐาน basis + ความหมายของพิกัด
+            {
+                title: 'เริ่มจาก basis vectors มาตรฐานใน 2 มิติ',
+                content: `
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-th"></i> มาตรฐาน basis</h2>
+                            <div class="math-block">e₁ = [1, 0]ᵀ ,  e₂ = [0, 1]ᵀ</div>
+                            <p><span class="highlight">e₁</span> กำหนดทิศทางแกน x , <span class="highlight">e₂</span> กำหนดทิศทางแกน y</p>
+                            <div style="margin-top:1rem; background:#eaf3f8; padding:0.8rem 1.2rem; border-radius:1.8rem;">
+                                <p style="font-weight:500;">เวกเตอร์ <span class="highlight">v = [3; 2]</span> หมายถึง</p>
+                                <p style="font-size:1.1rem;">เดิน 3 หน่วยในทิศ e₁ และ 2 หน่วยในทิศ e₂</p>
+                            </div>
+                            <div class="step-box" style="margin-top:0.8rem;">
+                                <i class="fas fa-weight-hanging"></i> “ตัวเลขในเวกเตอร์” คือค่าน้ำหนักที่บอกว่าจะผสม basis vectors อย่างไร
+                            </div>
+                            <div class="math-block" style="margin-top:0.4rem;">v = 3e₁ + 2e₂</div>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="canvas0" width="300" height="260"></canvas>
+                            <div class="legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> e₁ = (1,0)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> e₂ = (0,1)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#d48c34;"></span> v = (3,2)</span>
+                            </div>
+                            <p style="margin-top:0.2rem; font-size:0.9rem;">v = 3·e₁ + 2·e₂</p>
+                        </div>
+                    </div>
+                `
+            },
+            // 1: เงื่อนไขสำคัญของ basis
             {
                 title: 'เงื่อนไขสำคัญของ basis',
                 content: `
-                    <div class="card-grid">
-                        <div class="text-card">
-                            <h2><i class="fas fa-check-circle" style="color:#1e7e8f;"></i>  basis = </h2>
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-check-circle" style="color:#1e7e8f;"></i> basis = </h2>
                             <p style="font-size:1.2rem; font-weight:400; margin-top:0.2rem;">
                                 ชุดของเวกเตอร์ที่เป็นอิสระต่อกัน และ <strong>span</strong> ได้ทั้ง space
                             </p>
                             <div style="margin-top:1.2rem;">
-                                <p>สำหรับ <span class="highlight-math">ℝ²</span> ต้องมีเวกเตอร์ 2 ตัวที่:</p>
+                                <p>สำหรับ <span class="highlight">ℝ²</span> ต้องมีเวกเตอร์ 2 ตัวที่:</p>
                                 <div class="math-block">det([v₁  v₂]) ≠ 0</div>
                                 <p style="margin-top:0.5rem;">✅ แปลว่าเวกเตอร์สองตัว <strong>ไม่อยู่บนเส้นตรงเดียวกัน</strong> จึงสร้างพื้นที่ 2D ได้</p>
                             </div>
-                            <div class="det-example">
+                            <div class="step-box">
                                 <i class="fas fa-calculator" style="margin-right:6px;"></i> ดีเทอร์มิแนนต์ ≠ 0 → basis
                             </div>
                         </div>
-                        <div class="visual-vectors">
-                            <div class="vector-canvas-wrapper">
-                                <canvas id="canvas1" width="300" height="260"></canvas>
-                            </div>
-                            <div class="vector-legend">
+                        <div class="canvas-wrapper">
+                            <canvas id="canvas1" width="300" height="260"></canvas>
+                            <div class="legend">
                                 <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> v₁ = (2,0)</span>
                                 <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> v₂ = (1,1)</span>
                             </div>
@@ -384,29 +319,27 @@
                     </div>
                 `
             },
-            // Slide 2: ตัวอย่าง ตั้งฉาก vs ไม่ตั้งฉาก + ตาราง
+            // 2: ตั้งฉาก vs ไม่ตั้งฉาก
             {
                 title: 'ตัวอย่าง basis: ตั้งฉาก & ไม่ตั้งฉาก',
                 content: `
-                    <div class="card-grid">
-                        <div class="text-card">
-                            <h2><i class="fas fa-arrow-right"></i>  ตั้งฉาก (orthogonal)</h2>
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-arrow-right"></i> ตั้งฉาก (orthogonal)</h2>
                             <div class="math-block">e₁ = [1,0]ᵀ , e₂ = [0,1]ᵀ</div>
                             <p>สองตัวนี้ตั้งฉากกัน และเป็น basis มาตรฐานของ ℝ²</p>
                             <hr style="margin:1rem 0; opacity:0.2;">
-                            <h2 style="margin-top:0.5rem;"><i class="fas fa-arrows-alt-h"></i>  ไม่ตั้งฉาก</h2>
+                            <h2 style="margin-top:0.5rem;"><i class="fas fa-arrows-alt-h"></i> ไม่ตั้งฉาก</h2>
                             <div class="math-block">v₁ = [2,0]ᵀ , v₂ = [1,1]ᵀ</div>
-                            <p>นำมาเป็นคอลัมน์ของเมทริกซ์: <span class="highlight-math">A = [[2,1],[0,1]]</span></p>
-                            <div class="det-example" style="margin-top:0.5rem;">
+                            <p>นำมาเป็นคอลัมน์ของเมทริกซ์: <span class="highlight">A = [[2,1],[0,1]]</span></p>
+                            <div class="step-box" style="margin-top:0.5rem;">
                                 det(A) = 2(1) − 1(0) = <strong>2 ≠ 0</strong> 
                                 <span style="margin-left:0.8rem;">✅ basis ของ ℝ²</span>
                             </div>
                         </div>
-                        <div class="visual-vectors">
-                            <div class="vector-canvas-wrapper">
-                                <canvas id="canvas2" width="300" height="260"></canvas>
-                            </div>
-                            <div class="vector-legend">
+                        <div class="canvas-wrapper">
+                            <canvas id="canvas2" width="300" height="260"></canvas>
+                            <div class="legend">
                                 <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> e₁ = (1,0)</span>
                                 <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> e₂ = (0,1)</span>
                                 <span class="legend-item"><span class="color-dot" style="background:#d48c34;"></span> v₁ = (2,0)</span>
@@ -417,13 +350,13 @@
                     </div>
                 `
             },
-            // Slide 3: สรุปสั้น + orthonormal
+            // 3: สรุปคุณสมบัติ
             {
                 title: 'สรุปสั้น ๆ และคำสำคัญ',
                 content: `
-                    <div class="card-grid">
-                        <div class="text-card">
-                            <h2><i class="fas fa-table"></i>  คุณสมบัติ vs basis</h2>
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-table"></i> คุณสมบัติ vs basis</h2>
                             <table class="summary-table">
                                 <thead><tr><th>คุณสมบัติ</th><th>จำเป็นสำหรับ basis?</th></tr></thead>
                                 <tbody>
@@ -435,18 +368,158 @@
                                 </tbody>
                             </table>
                             <div style="margin-top:0.8rem;">
-                                <span class="matrix-badge"><i class="fas fa-arrow-right"></i>  orthogonal basis: ตั้งฉาก</span>
-                                <span class="matrix-badge" style="margin-left:0.4rem;"><i class="fas fa-arrow-right"></i>  orthonormal: ตั้งฉาก + ยาว 1</span>
+                                <span class="matrix-badge"><i class="fas fa-arrow-right"></i> orthogonal basis: ตั้งฉาก</span>
+                                <span class="matrix-badge" style="margin-left:0.4rem;"><i class="fas fa-arrow-right"></i> orthonormal: ตั้งฉาก + ยาว 1</span>
                             </div>
                         </div>
-                        <div class="visual-vectors" style="justify-content:center;">
+                        <div class="canvas-wrapper" style="justify-content:center;">
                             <div class="quote-box">
                                 <i class="fas fa-quote-left" style="margin-right:6px;"></i>
                                 Basis vectors do not have to be perpendicular. <br>
                                 They only need to be independent and able to span the space.
                             </div>
                             <div style="background:#e2eef5; border-radius:2rem; padding:1rem 1.5rem; margin-top:0.5rem; width:100%;">
-                                <p style="font-weight:500;"><i class="fas fa-check-circle" style="color:#1f7a5e;"></i>  ตัวอย่าง: v₁=(2,0), v₂=(1,1)  independent → basis</p>
+                                <p style="font-weight:500;"><i class="fas fa-check-circle" style="color:#1f7a5e;"></i> ตัวอย่าง: v₁=(2,0), v₂=(1,1) independent → basis</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // 4: Linear combination (interactive)
+            {
+                title: 'Linear combination · Interactive',
+                content: `
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <div class="math-block" style="text-align:center; font-size:1.4rem;">w = a·u + b·v</div>
+                            <div style="background:#dceaf2; padding:0.6rem 1rem; border-radius:1.5rem; text-align:center; font-size:1.1rem; font-weight:500;">
+                                <span style="color:#bc4b51;">u</span> = (2, 1) &nbsp;&nbsp; 
+                                <span style="color:#2b7a78;">v</span> = (−1, 2)
+                            </div>
+                            <div class="weight-control">
+                                <div class="weight-row">
+                                    <label>a</label>
+                                    <input type="range" id="sliderA" min="-3" max="3" value="1" step="0.1">
+                                    <span class="value-badge" id="valA">1.0</span>
+                                </div>
+                                <div class="weight-row">
+                                    <label>b</label>
+                                    <input type="range" id="sliderB" min="-3" max="3" value="1" step="0.1">
+                                    <span class="value-badge" id="valB">1.0</span>
+                                </div>
+                            </div>
+                            <div class="result-vector">
+                                <i class="fas fa-arrow-right" style="color:#1f7a8c;"></i> 
+                                w = <strong id="wCoords">(1.0, 3.0)</strong>
+                            </div>
+                            <div style="margin-top:0.6rem; display:flex; gap:0.8rem; justify-content:center; flex-wrap:wrap;">
+                                <span class="inline-math" style="background:#f0e6e6; color:#a14040;">a = <span id="aDisplay">1.0</span></span>
+                                <span class="inline-math" style="background:#e6f0ec; color:#1f6b5e;">b = <span id="bDisplay">1.0</span></span>
+                            </div>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="canvasLC" width="300" height="260"></canvas>
+                            <div class="legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> u = (2,1)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> v = (-1,2)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#d48c34;"></span> w</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // 5: Matrix transformation - new basis
+            {
+                title: 'เมทริกซ์คือชุดของ basis vectors ใหม่',
+                content: `
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-columns" style="color:#1f7a8c;"></i> อ่านเมทริกซ์</h2>
+                            <p style="margin-bottom:0.4rem;">ให้ <span class="highlight">v₁ = (2,0)</span> และ <span class="highlight">v₂ = (1,1)</span></p>
+                            <div class="math-block">A = [ v₁  v₂ ] = [[2, 1], [0, 1]]</div>
+                            <div class="step-box">
+                                <p><i class="fas fa-arrow-right" style="color:#1f7a8c;"></i> เมทริกซ์บอกเราว่า:</p>
+                                <div class="math-block" style="background:#d6e8f0;">e₁ → (2,0) &nbsp;&nbsp; e₂ → (1,1)</div>
+                                <p style="font-size:0.95rem;">basis มาตรฐาน <span class="highlight">e₁</span> และ <span class="highlight">e₂</span> ถูกส่งไปยังคอลัมน์ของ A</p>
+                            </div>
+                            <div style="margin-top:0.5rem; background:#dceaf2; padding:0.4rem 1rem; border-radius:60px; text-align:center;">
+                                <span class="inline-math">A = [ Ae₁  Ae₂ ]</span>
+                            </div>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="canvasMT0" width="300" height="260"></canvas>
+                            <div class="legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> e₁ → v₁</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#2b7a78;"></span> e₂ → v₂</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // 6: Matrix transformation - example
+            {
+                title: 'ตัวอย่าง: เปลี่ยน basis ด้วย A',
+                content: `
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-vector-square"></i> x = 3e₁ + 2e₂</h2>
+                            <div class="math-block">x = [3, 2]ᵀ = 3·e₁ + 2·e₂</div>
+                            <div style="background:#eaf3f8; padding:0.8rem 1.2rem; border-radius:1.5rem; margin:0.6rem 0;">
+                                <p><span class="highlight">ก่อน</span> เปลี่ยน basis: x = (3,2)</p>
+                                <p style="font-size:0.9rem;">หมายถึง เดิน 3 หน่วยในทิศ e₁ และ 2 หน่วยในทิศ e₂</p>
+                            </div>
+                            <div class="step-box" style="border-left-color:#d48c34;">
+                                <p><i class="fas fa-arrow-right" style="color:#d48c34;"></i> <span class="highlight">หลัง</span> เปลี่ยน: Ax = 3·(Ae₁) + 2·(Ae₂)</p>
+                                <div class="math-block" style="background:#e8dcd0;">Ax = 3·(2,0) + 2·(1,1) = (6,0) + (2,2) = (8,2)</div>
+                            </div>
+                            <div style="margin-top:0.4rem; background:#dceaf2; padding:0.3rem 1rem; border-radius:60px; text-align:center;">
+                                <span class="inline-math">A·(3,2) = (8,2)</span>
+                            </div>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="canvasMT1" width="300" height="260"></canvas>
+                            <div class="legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> x = (3,2)</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#d48c34;"></span> Ax = (8,2)</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // 7: Matrix transformation - summary
+            {
+                title: 'สรุป: matrix transformation',
+                content: `
+                    <div class="grid-2col">
+                        <div class="text-panel">
+                            <h2><i class="fas fa-check-circle" style="color:#1f7a8c;"></i> หัวใจสำคัญ</h2>
+                            <div style="background:#eaf3f8; padding:1rem 1.4rem; border-radius:1.8rem; margin:0.6rem 0;">
+                                <p style="font-size:1.2rem; font-weight:500;">A = [ <span style="color:#bc4b51;">Ae₁</span>  <span style="color:#2b7a78;">Ae₂</span> ]</p>
+                                <p style="margin-top:0.3rem;">คอลัมน์ของ A คือภาพของ basis มาตรฐาน</p>
+                            </div>
+                            <div class="step-box">
+                                <p><i class="fas fa-arrow-right"></i> สำหรับ <span class="highlight">x = a·e₁ + b·e₂</span></p>
+                                <p>Ax = a·(Ae₁) + b·(Ae₂) = a·(คอลัมน์₁) + b·(คอลัมน์₂)</p>
+                            </div>
+                            <div style="background:#d6e8f0; padding:0.6rem 1rem; border-radius:1.5rem; margin-top:0.6rem;">
+                                <i class="fas fa-cube" style="color:#1f5f72;"></i> เมทริกซ์ = การเปลี่ยน basis vectors
+                            </div>
+                        </div>
+                        <div class="canvas-wrapper" style="justify-content:center;">
+                            <div style="background:#eaf3f8; border-radius:2rem; padding:1.2rem 1.6rem; width:100%; text-align:center;">
+                                <p style="font-size:1.2rem; font-weight:500;">A·(3,2) = (8,2)</p>
+                                <div style="display:flex; justify-content:center; gap:1.2rem; flex-wrap:wrap; margin-top:0.4rem;">
+                                    <span class="inline-math" style="background:#bc4b51; color:white;">e₁ → (2,0)</span>
+                                    <span class="inline-math" style="background:#2b7a78; color:white;">e₂ → (1,1)</span>
+                                </div>
+                                <div style="margin-top:0.8rem; background:white; padding:0.3rem 0.8rem; border-radius:60px;">
+                                    <span class="highlight">x = 3e₁ + 2e₂</span>  →  <span class="highlight" style="color:#d48c34;">Ax = 3(2,0) + 2(1,1)</span>
+                                </div>
+                            </div>
+                            <canvas id="canvasMT2" width="300" height="260" style="margin-top:0.6rem;"></canvas>
+                            <div class="legend">
+                                <span class="legend-item"><span class="color-dot" style="background:#bc4b51;"></span> x</span>
+                                <span class="legend-item"><span class="color-dot" style="background:#d48c34;"></span> Ax</span>
                             </div>
                         </div>
                     </div>
@@ -454,29 +527,24 @@
             }
         ];
 
+        // ---- state ----
         let currentSlide = 0;
         const totalSlides = slides.length;
-
-        // DOM elements
         const slideContent = document.getElementById('slideContent');
         const slideCounter = document.getElementById('slideCounter');
         const pageIndicator = document.getElementById('pageIndicator');
         const prevBtn = document.getElementById('prevSlide');
         const nextBtn = document.getElementById('nextSlide');
 
-        // ----- helper to draw on canvas (both canvas1 & canvas2) -----
+        // ---- draw helper ----
         function drawVectors(canvasId, vectors, labels, colors, grid = true) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const w = canvas.width, h = canvas.height;
             ctx.clearRect(0, 0, w, h);
-
-            // background
             ctx.fillStyle = '#fafdff';
             ctx.fillRect(0, 0, w, h);
-
-            // grid lines
             if (grid) {
                 ctx.strokeStyle = '#d5e3eb';
                 ctx.lineWidth = 0.8;
@@ -493,8 +561,6 @@
                     ctx.stroke();
                 }
             }
-
-            // axis
             ctx.strokeStyle = '#3a5f6b';
             ctx.lineWidth = 1.8;
             ctx.beginPath();
@@ -502,7 +568,6 @@
             ctx.lineTo(30, h-30);
             ctx.lineTo(w-30, h-30);
             ctx.stroke();
-            // arrow heads
             ctx.fillStyle = '#3a5f6b';
             ctx.beginPath();
             ctx.moveTo(30, 25);
@@ -514,29 +579,21 @@
             ctx.lineTo(w-35, h-24);
             ctx.lineTo(w-35, h-36);
             ctx.fill();
-
-            // scale: 40px = 1 unit, origin at (30, h-30)
             const originX = 30, originY = h-30;
             const scale = 40;
-
-            // draw vectors
             vectors.forEach((vec, idx) => {
                 const [vx, vy] = vec;
                 const endX = originX + vx * scale;
                 const endY = originY - vy * scale;
-                const color = colors[idx] || '#000000';
-
+                const color = colors[idx] || '#000';
                 ctx.beginPath();
                 ctx.moveTo(originX, originY);
                 ctx.lineTo(endX, endY);
                 ctx.strokeStyle = color;
                 ctx.lineWidth = 4;
                 ctx.stroke();
-
-                // arrowhead
                 const angle = Math.atan2(originY - endY, endX - originX);
-                const headLen = 12;
-                const headAngle = 0.45;
+                const headLen = 12, headAngle = 0.45;
                 ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.moveTo(endX, endY);
@@ -544,24 +601,98 @@
                 ctx.lineTo(endX - headLen * Math.cos(angle + headAngle), endY + headLen * Math.sin(angle + headAngle));
                 ctx.closePath();
                 ctx.fill();
-
-                // label
                 ctx.font = 'bold 13px "Segoe UI", sans-serif';
                 ctx.fillStyle = color;
                 ctx.fillText(labels[idx] || '', endX + 6, endY - 6);
             });
-
-            // origin label
             ctx.fillStyle = '#1a3f4a';
             ctx.font = '12px sans-serif';
             ctx.fillText('O', originX-20, originY+20);
         }
 
+        // ---- Linear combination specific draw ----
+        function drawLC(a, b) {
+            const canvas = document.getElementById('canvasLC');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            const u = [2, 1], v = [-1, 2];
+            const wVec = [a * u[0] + b * v[0], a * u[1] + b * v[1]];
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#fafdff';
+            ctx.fillRect(0, 0, w, h);
+            ctx.strokeStyle = '#d5e3eb';
+            ctx.lineWidth = 0.8;
+            for (let i = 0; i <= 6; i++) {
+                const x = 30 + i * 40;
+                const y = 30 + i * 40;
+                ctx.beginPath();
+                ctx.moveTo(x, 30);
+                ctx.lineTo(x, h-30);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(30, y);
+                ctx.lineTo(w-30, y);
+                ctx.stroke();
+            }
+            ctx.strokeStyle = '#3a5f6b';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(30, 30);
+            ctx.lineTo(30, h-30);
+            ctx.lineTo(w-30, h-30);
+            ctx.stroke();
+            ctx.fillStyle = '#3a5f6b';
+            ctx.beginPath();
+            ctx.moveTo(30, 25);
+            ctx.lineTo(24, 35);
+            ctx.lineTo(36, 35);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(w-25, h-30);
+            ctx.lineTo(w-35, h-24);
+            ctx.lineTo(w-35, h-36);
+            ctx.fill();
+            const originX = 30, originY = h-30, scale = 40;
+
+            const vectors = [u, v, wVec];
+            const colors = ['#bc4b51', '#2b7a78', '#d48c34'];
+            const labels = ['u', 'v', 'w'];
+            vectors.forEach((vec, idx) => {
+                const [vx, vy] = vec;
+                const endX = originX + vx * scale;
+                const endY = originY - vy * scale;
+                const color = colors[idx];
+                ctx.beginPath();
+                ctx.moveTo(originX, originY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                const angle = Math.atan2(originY - endY, endX - originX);
+                const headLen = 12, headAngle = 0.45;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(endX - headLen * Math.cos(angle - headAngle), endY + headLen * Math.sin(angle - headAngle));
+                ctx.lineTo(endX - headLen * Math.cos(angle + headAngle), endY + headLen * Math.sin(angle + headAngle));
+                ctx.closePath();
+                ctx.fill();
+                ctx.font = 'bold 13px "Segoe UI", sans-serif';
+                ctx.fillStyle = color;
+                ctx.fillText(labels[idx], endX + 6, endY - 6);
+            });
+            ctx.fillStyle = '#1a3f4a';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('O', originX-20, originY+20);
+        }
+
+        // ---- render slide ----
         function renderSlide(index) {
             const slide = slides[index];
             slideContent.innerHTML = slide.content;
 
-            // update counter + indicator
             slideCounter.innerText = `${index+1} / ${totalSlides}`;
             let dots = '';
             for (let i = 0; i < totalSlides; i++) {
@@ -570,50 +701,62 @@
             }
             pageIndicator.innerText = dots;
 
-            // after content render, draw canvases if exist
             setTimeout(() => {
-                // slide 0: canvas1 => v1=(2,0), v2=(1,1)
                 if (index === 0) {
-                    drawVectors('canvas1', 
-                        [[2,0], [1,1]], 
-                        ['v₁', 'v₂'], 
-                        ['#bc4b51', '#2b7a78'], true);
-                }
-                // slide 1: canvas2 => e1=(1,0), e2=(0,1), v1=(2,0), v2=(1,1)
-                if (index === 1) {
-                    drawVectors('canvas2', 
-                        [[1,0], [0,1], [2,0], [1,1]], 
-                        ['e₁', 'e₂', 'v₁', 'v₂'], 
-                        ['#bc4b51', '#2b7a78', '#d48c34', '#5f4b8b'], true);
-                }
-                // slide 2: no canvas, but we keep
-            }, 50);
+                    drawVectors('canvas0', [[1,0], [0,1], [3,2]], ['e₁', 'e₂', 'v'], ['#bc4b51', '#2b7a78', '#d48c34'], true);
+                } else if (index === 1) {
+                    drawVectors('canvas1', [[2,0], [1,1]], ['v₁', 'v₂'], ['#bc4b51', '#2b7a78'], true);
+                } else if (index === 2) {
+                    drawVectors('canvas2', [[1,0], [0,1], [2,0], [1,1]], ['e₁', 'e₂', 'v₁', 'v₂'], ['#bc4b51', '#2b7a78', '#d48c34', '#5f4b8b'], true);
+                } else if (index === 4) {
+                    // Linear combination
+                    const sliderA = document.getElementById('sliderA');
+                    const sliderB = document.getElementById('sliderB');
+                    const valA = document.getElementById('valA');
+                    const valB = document.getElementById('valB');
+                    const aDisplay = document.getElementById('aDisplay');
+                    const bDisplay = document.getElementById('bDisplay');
+                    const wCoords = document.getElementById('wCoords');
+                    const u = [2, 1], v = [-1, 2];
 
-            // re-attach event listeners for canvas resize? no needed
+                    function updateLC() {
+                        const a = parseFloat(sliderA.value);
+                        const b = parseFloat(sliderB.value);
+                        const w = [a * u[0] + b * v[0], a * u[1] + b * v[1]];
+                        valA.textContent = a.toFixed(1);
+                        valB.textContent = b.toFixed(1);
+                        aDisplay.textContent = a.toFixed(1);
+                        bDisplay.textContent = b.toFixed(1);
+                        wCoords.textContent = `(${w[0].toFixed(2)}, ${w[1].toFixed(2)})`;
+                        drawLC(a, b);
+                    }
+                    sliderA.addEventListener('input', updateLC);
+                    sliderB.addEventListener('input', updateLC);
+                    updateLC();
+                } else if (index === 5) {
+                    drawVectors('canvasMT0', [[2,0], [1,1]], ['v₁', 'v₂'], ['#bc4b51', '#2b7a78'], true);
+                } else if (index === 6) {
+                    drawVectors('canvasMT1', [[3,2], [8,2]], ['x', 'Ax'], ['#bc4b51', '#d48c34'], true);
+                } else if (index === 7) {
+                    drawVectors('canvasMT2', [[3,2], [8,2]], ['x', 'Ax'], ['#bc4b51', '#d48c34'], true);
+                }
+            }, 60);
         }
 
-        // navigation
         function goToSlide(index) {
             if (index < 0) index = 0;
-            if (index >= totalSlides) index = totalSlides - 1;
+            if (index >= totalSlides) index = totalSlides-1;
             currentSlide = index;
             renderSlide(currentSlide);
         }
 
-        prevBtn.addEventListener('click', () => {
-            goToSlide(currentSlide - 1);
-        });
-        nextBtn.addEventListener('click', () => {
-            goToSlide(currentSlide + 1);
-        });
-
-        // keyboard
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide-1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide+1));
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
-            else if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+            if (e.key === 'ArrowLeft') goToSlide(currentSlide-1);
+            else if (e.key === 'ArrowRight') goToSlide(currentSlide+1);
         });
 
-        // initial render
         renderSlide(0);
     })();
 </script>
