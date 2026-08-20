@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบกฎการบวกและกฎการคูณ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f7f3e9 0%, #fff9ee 100%);
+            font-family: 'Segoe UI', 'Sukhumvit Set', 'Thonburi', system-ui, sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: rgba(255, 250, 240, 0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 48px;
+            padding: 2rem 2rem 2.5rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f0e3d0;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #3d2c1b;
+            text-align: center;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .subhead {
+            text-align: center;
+            color: #6b4f32;
+            font-size: 1rem;
+            padding: 0 0.5rem 1.5rem;
+            border-bottom: 2px dashed #dacbb8;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .subhead i {
+            font-style: normal;
+            background: #e7dac8;
+            padding: 0.2rem 0.9rem;
+            border-radius: 30px;
+            font-weight: 500;
+            color: #3d2c1b;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 32px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(110, 70, 40, 0.08);
+            border: 1px solid #ede3d4;
+            transition: all 0.1s ease;
+        }
+
+        .quiz-card.correct {
+            border-left: 10px solid #2b7a4b;
+            background: #f6fcf8;
+        }
+
+        .quiz-card.wrong {
+            border-left: 10px solid #b13e3e;
+            background: #fdf6f5;
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .q-number {
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: #dccfc0;
+            color: #2d1f12;
+            padding: 0.1rem 1rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+        }
+
+        .q-tag {
+            font-size: 0.8rem;
+            background: #c0b09b;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #271e14;
+            margin: 0.8rem 0 1.2rem 0;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 0.8rem 0 1.2rem;
+        }
+
+        .option-btn {
+            background: #f2ebe1;
+            border: 2px solid #ddd0bf;
+            padding: 0.7rem 1.8rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #2d1f12;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex: 0 1 auto;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #e3d4c2;
+            border-color: #b79e84;
+            transform: scale(1.02);
+            box-shadow: 0 6px 10px rgba(90, 60, 30, 0.1);
+        }
+
+        .option-btn.selected-correct {
+            background: #1f7a48;
+            border-color: #13522f;
+            color: white;
+        }
+
+        .option-btn.selected-wrong {
+            background: #b13e3e;
+            border-color: #822b2b;
+            color: white;
+        }
+
+        .option-btn:disabled {
+            opacity: 0.7;
+            cursor: default;
+            transform: none !important;
+        }
+
+        .feedback {
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            margin: 0.8rem 0 0.2rem;
+            font-weight: 500;
+            display: inline-block;
+            background: #f3ede6;
+            color: #3a2c1d;
+        }
+
+        .feedback .highlight {
+            font-weight: 700;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+
+        .reset-btn {
+            background: #dccfc0;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #2d1f12;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border: 1px solid #cbb9a4;
+        }
+
+        .reset-btn:hover {
+            background: #cebcab;
+            transform: scale(1.02);
+            box-shadow: 0 8px 14px rgba(70, 40, 20, 0.1);
+        }
+
+        .score-box {
+            background: #3d2c1b;
+            color: #f7efe4;
+            padding: 0.6rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .footnote {
+            margin-top: 1.8rem;
+            text-align: center;
+            color: #78624b;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2d2bf;
+            padding-top: 1.5rem;
+        }
+
+        /*  ONE-LINE CREDIT + VERIFY (ตามที่ขอ) */
+        .credit-verify {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #3d2c1b;
+            background: #efe7dd;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            display: inline-block;
+            border: 1px solid #dacbb8;
+            box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .credit-verify strong {
+            background: #2b5f3a;
+            color: white;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin: 0 4px;
+        }
+
+        .credit-verify .ai {
+            background: #cbb59b;
+            padding: 0.1rem 0.7rem;
+            border-radius: 30px;
+            color: #1f160e;
+        }
+
+        @media (max-width: 550px) {
+            .container { padding: 1.5rem 1rem; }
+            .quiz-card { padding: 1.2rem 1.2rem; }
+            .question-text { font-size: 1rem; }
+            .option-btn { padding: 0.6rem 1.2rem; }
+            .action-bar { flex-direction: column; align-items: stretch; }
+            .reset-btn { width: 100%; }
+            .score-box { text-align: center; }
+            .credit-verify { font-size: 0.85rem; padding: 0.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        <span>📐 แบบทดสอบ</span>
+        <span style="font-size: 1.8rem;">➕ ✖️</span>
+    </h1>
+    <div class="subhead">
+        <i>กฎการบวก หรือ กฎการคูณ?</i> &nbsp;·&nbsp; 8 ข้อ ทดสอบความเข้าใจ
+    </div>
+
+    <div id="quizList"></div>
+
+    <div class="action-bar">
+        <button class="reset-btn" id="resetQuizBtn">⟳ เริ่มใหม่</button>
+        <div class="score-box" id="scoreDisplay">✅ 0 / 8</div>
+    </div>
+
+    <!-- ONE SENTENCE: เครดิต + ครูตรวจสอบ (ตามคำขอ) -->
+    <div style="text-align: center; margin-top: 1.8rem;">
+        <div class="credit-verify">
+            👩‍🏫 <strong>ครูตรวจสอบแล้ว</strong> · พัฒนาร่วมกับ <span class="ai">DeepSeek</span> และ <span class="ai">OpenAI</span>
+        </div>
+    </div>
+
+    <div class="footnote">
+        💡 เลือกคำตอบ · ระบบจะแจ้งผลทันที พร้อมเฉลย
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ----- ข้อสอบทั้ง 8 ข้อ (ภาษาไทย) -----
+        const quizzes = [
+            {
+                id: 1,
+                type: 'แนวคิด',
+                question: 'คุณสั่งเครื่องดื่มที่ร้านกาแฟ คุณเลือกได้ <strong>อย่างใดอย่างหนึ่ง</strong> ระหว่าง กาแฟร้อน หรือ เอสเปรสโซ คุณจะได้เครื่องดื่มเพียงแก้วเดียว ควรใช้กฎใด?',
+                options: ['A) กฎการบวก', 'B) กฎการคูณ'],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! เป็นการเติม "หนึ่งตำแหน่ง" (เครื่องดื่ม) → ใช้กฎการบวก'
+            },
+            {
+                id: 2,
+                type: 'แนวคิด',
+                question: 'คุณแต่งตัวไปทำงาน ต้องเลือก <strong>กางเกง 1 ตัว</strong> และ <strong>เสื้อ 1 ตัว</strong> (ต้องมีทั้งสองอย่าง) ควรใช้กฎใด?',
+                options: ['A) กฎการบวก', 'B) กฎการคูณ'],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! เป็นการเติม "หลายตำแหน่ง" (กางเกง + เสื้อ) → ใช้กฎการคูณ'
+            },
+            {
+                id: 3,
+                type: 'แนวคิด',
+                question: 'คำสำคัญใดที่มักบ่งบอกว่า <strong>ควรใช้กฎการบวก</strong>?',
+                options: ['A) "และ" (เลือกอันนี้และอันนั้น)', 'B) "หรือ" (เลือกอันนี้หรืออันนั้น)'],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! "หรือ" คือเลือกอย่างใดอย่างหนึ่ง → บวก'
+            },
+            {
+                id: 4,
+                type: 'แนวคิด',
+                question: 'ร้านอาหารมีซุป 4 ชนิด และสลัด 8 ชนิด ถ้าลูกค้าต้องการ <strong>อาหารเรียกน้ำย่อยเพียง 1 อย่าง</strong> (ซุป หรือ สลัด) ควรใช้กฎใด?',
+                options: ['A) กฎการบวก (4+8)', 'B) กฎการคูณ (4×8)'],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! เป็นการเลือก 1 อย่างจากสองกลุ่ม → บวก (เติมตำแหน่งเดียว)'
+            },
+            {
+                id: 5,
+                type: 'คำนวณ',
+                question: 'เมนูอาหารกลางวัน: เลือก <strong>จานหลัก 1 อย่าง</strong> และ <strong>เครื่องเคียง 1 อย่าง</strong> มีจานหลัก 5 ชนิด เครื่องเคียง 6 ชนิด <br> มีทั้งหมดกี่วิธี?',
+                options: ['A) 11 วิธี', 'B) 30 วิธี'],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! 5 × 6 = 30 (หลัก AND เคียง → กฎการคูณ)'
+            },
+            {
+                id: 6,
+                type: 'คำนวณ',
+                question: 'คุณวางแผนท่องเที่ยว จะไป <strong>ญี่ปุ่น เกาหลี หรือ ไทย</strong> อย่างใดอย่างหนึ่ง มีตัวเลือกปลายทางกี่แบบ?',
+                options: ['A) 3 แบบ', 'B) 6 แบบ'],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! 1+1+1 = 3 (เลือกที่เดียวจากรายการ → บวก)'
+            },
+            {
+                id: 7,
+                type: 'คำนวณ',
+                question: 'รหัสผ่านต้องประกอบด้วย <strong>ตัวอักษร 1 ตัว</strong> (A-Z) และ <strong>เลข 1 หลัก</strong> (0-9) มีรหัสที่เป็นไปได้ทั้งหมดกี่แบบ?',
+                options: ['A) 36 แบบ', 'B) 260 แบบ'],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! 26×10 = 260 (ตัวอักษร AND เลข → คูณ)'
+            },
+            {
+                id: 8,
+                type: 'คำนวณ',
+                question: 'โรงเรียนมีชมรมคณิตศาสตร์ 2 ชมรม และชมรมวิทยาศาสตร์ 4 ชมรม ถ้านักเรียนต้อง <strong>เลือกเข้าชมรมเพียง 1 ชมรม</strong> (คณิตฯ หรือ วิทย์ฯ) มีตัวเลือกกี่แบบ?',
+                options: ['A) 6 แบบ', 'B) 8 แบบ'],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! 2+4 = 6 (เลือกอย่างใดอย่างหนึ่ง → บวก)'
+            }
+        ];
+
+        // ----- สร้าง DOM + จัดการ state -----
+        const quizListEl = document.getElementById('quizList');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+
+        // แต่ละข้อ: เก็บสถานะว่าเลือกคำตอบใด (-1 = ยังไม่เลือก), ถูก/ผิด
+        let selectedAnswers = new Array(quizzes.length).fill(-1);
+        let answerStatus = new Array(quizzes.length).fill(null); // 'correct' or 'wrong' or null
+
+        // ฟังก์ชันเรนเดอร์ใหม่ทั้งหมด
+        function renderQuizzes() {
+            let html = '';
+            let correctCount = 0;
+
+            for (let i = 0; i < quizzes.length; i++) {
+                const q = quizzes[i];
+                const selectedIdx = selectedAnswers[i];
+                const status = answerStatus[i]; // 'correct' or 'wrong' or null
+
+                if (status === 'correct') correctCount++;
+
+                // คลาสสำหรับการ์ด (แสดงสีข้าง)
+                let cardClass = 'quiz-card';
+                if (status === 'correct') cardClass += ' correct';
+                else if (status === 'wrong') cardClass += ' wrong';
+
+                // สร้างปุ่มตัวเลือก
+                let optionsHtml = '';
+                for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+                    let btnClass = 'option-btn';
+                    let disabled = false;
+                    // ถ้าเลือกแล้ว (selectedIdx !== -1) และปุ่มนี้ถูกเลือก หรือ แสดงสถานะถูก/ผิด
+                    if (selectedIdx !== -1) {
+                        disabled = true;   // ปิดการคลิกทั้งหมดเมื่อเลือกแล้ว
+                        if (optIdx === selectedIdx) {
+                            if (status === 'correct') btnClass += ' selected-correct';
+                            else if (status === 'wrong') btnClass += ' selected-wrong';
+                        }
+                        // ถ้าเป็นคำตอบที่ถูกต้อง (แต่ไม่ได้เลือก) เราไม่ต้องไฮไลต์ ให้คงไว้แบบจืด
+                    }
+                    optionsHtml += `<button class="${btnClass}" data-quiz-index="${i}" data-opt-index="${optIdx}" ${disabled ? 'disabled' : ''}>${q.options[optIdx]}</button>`;
+                }
+
+                // ส่วนแสดง feedback / คำอธิบาย
+                let feedbackHtml = '';
+                if (selectedIdx !== -1) {
+                    const isCorrect = (status === 'correct');
+                    const icon = isCorrect ? '✅' : '❌';
+                    const text = isCorrect ? 'ตอบถูก!' : 'ตอบผิด';
+                    feedbackHtml = `<div class="feedback"><span class="highlight">${icon} ${text}</span>  ${q.explanation}</div>`;
+                } else {
+                    feedbackHtml = `<div class="feedback" style="background: transparent; padding-left: 0; color: #7f6a53;">คลิกตัวเลือกเพื่อตอบ</div>`;
+                }
+
+                // แท็กประเภท
+                const tagColor = q.type === 'แนวคิด' ? '#8b7a66' : '#a5835c';
+
+                html += `
+                    <div class="${cardClass}" id="quizCard-${i}">
+                        <div class="quiz-header">
+                            <span class="q-number">ข้อ ${i+1}</span>
+                            <span class="q-tag" style="background:${tagColor};">${q.type}</span>
+                        </div>
+                        <div class="question-text">${q.question}</div>
+                        <div class="options-grid" id="optionsGrid-${i}">
+                            ${optionsHtml}
+                        </div>
+                        ${feedbackHtml}
+                    </div>
+                `;
+            }
+
+            quizListEl.innerHTML = html;
+            // อัปเดตคะแนน
+            scoreDisplay.textContent = `✅ ${correctCount} / 8`;
+
+            // กำหนด event listener ให้ปุ่มที่ยังไม่ถูกปิด (active)
+            document.querySelectorAll('.option-btn:not([disabled])').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const quizIdx = parseInt(this.dataset.quizIndex);
+                    const optIdx = parseInt(this.dataset.optIndex);
+                    handleAnswer(quizIdx, optIdx);
+                });
+            });
+        }
+
+        // ฟังก์ชันจัดการการเลือกคำตอบ
+        function handleAnswer(quizIdx, optIdx) {
+            // ถ้าเลือกไปแล้ว ไม่ทำอะไร
+            if (selectedAnswers[quizIdx] !== -1) return;
+
+            const q = quizzes[quizIdx];
+            const isCorrect = (optIdx === q.correct);
+
+            // อัปเดต state
+            selectedAnswers[quizIdx] = optIdx;
+            answerStatus[quizIdx] = isCorrect ? 'correct' : 'wrong';
+
+            // เรนเดอร์ใหม่ทั้งหมด (เพื่อแสดงผล)
+            renderQuizzes();
+
+            // เลื่อนไปยังข้อนั้น (นิดหน่อย)
+            const card = document.getElementById(`quizCard-${quizIdx}`);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // รีเซ็ตทั้งหมด
+        function resetAll() {
+            selectedAnswers = new Array(quizzes.length).fill(-1);
+            answerStatus = new Array(quizzes.length).fill(null);
+            renderQuizzes();
+            // scroll ไปด้านบน
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ปุ่มรีเซ็ต
+        document.getElementById('resetQuizBtn').addEventListener('click', resetAll);
+
+        // เริ่มต้นแสดงผล
+        renderQuizzes();
+
+        // เพิ่มการรองรับปุ่มรีเซ็ตเพิ่ม (ถ้ามี)
+    })();
+</script>
+
+</body>
+</html>
