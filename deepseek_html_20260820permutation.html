@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบ : การเรียงสับเปลี่ยน (Permutation) และ การจัดหมู่ (Combination)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e6edf6 100%);
+            font-family: 'Segoe UI', 'Sukhumvit Set', 'Thonburi', system-ui, sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-container {
+            max-width: 820px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(6px);
+            border-radius: 56px;
+            padding: 2rem 2rem 2.2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 20, 40, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+            margin-bottom: 1.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #d0dcec;
+        }
+
+        .slide-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #1a2b4a;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slide-counter {
+            background: #1a2b4a;
+            color: white;
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .question-box {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem 2rem 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2eaf5;
+        }
+
+        .question-tag {
+            display: inline-block;
+            background: #dce5f0;
+            color: #1f3a5f;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.8rem;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0b1e33;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .option-btn {
+            background: #f2f6fc;
+            border: 2px solid #dce5f0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1a2b4a;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #e3ecf7;
+            border-color: #a0b9d6;
+            transform: scale(1.01);
+            box-shadow: 0 6px 12px rgba(30, 60, 100, 0.08);
+        }
+
+        .option-btn.selected-correct {
+            background: #1f7a48;
+            border-color: #13522f;
+            color: white;
+        }
+
+        .option-btn.selected-wrong {
+            background: #b13e3e;
+            border-color: #822b2b;
+            color: white;
+        }
+
+        .option-btn.show-correct {
+            background: #1f7a48;
+            border-color: #13522f;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .feedback {
+            padding: 0.9rem 1.4rem;
+            border-radius: 40px;
+            margin: 0.8rem 0 0.2rem;
+            font-weight: 500;
+            background: #eef3f9;
+            color: #1a2b4a;
+            border-left: 6px solid #7f9bc0;
+        }
+
+        .feedback .highlight {
+            font-weight: 700;
+        }
+
+        .nav-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .nav-btn {
+            background: #dce5f0;
+            border: none;
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a2b4a;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #c0cee0;
+            min-width: 110px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #c8d6e8;
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reset-btn {
+            background: #d0dbe9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1a2b4a;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #b6c7db;
+        }
+
+        .reset-btn:hover {
+            background: #c0d0e3;
+            transform: scale(1.02);
+        }
+
+        .score-badge {
+            background: #1a2b4a;
+            color: white;
+            padding: 0.4rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        .credit-line {
+            margin-top: 1.8rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #2d405b;
+            background: #e2eaf5;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            display: inline-block;
+            border: 1px solid #c5d4e8;
+            font-weight: 500;
+        }
+
+        .credit-line strong {
+            background: #1a2b4a;
+            color: white;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            margin: 0 4px;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #dce5f0;
+            border: 2px solid #bccde0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1f3a5f;
+            transition: 0.15s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #1a2b4a;
+            border-color: #1a2b4a;
+            color: white;
+        }
+
+        .dot.answered-correct {
+            background: #1f7a48;
+            border-color: #13522f;
+            color: white;
+        }
+
+        .dot.answered-wrong {
+            background: #b13e3e;
+            border-color: #822b2b;
+            color: white;
+        }
+
+        .dot:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 550px) {
+            .slide-container { padding: 1.2rem; }
+            .question-box { padding: 1.2rem; }
+            .question-text { font-size: 1rem; }
+            .option-btn { padding: 0.6rem 1.2rem; font-size: 0.95rem; }
+            .nav-area { flex-direction: column; align-items: stretch; }
+            .nav-btn { width: 100%; text-align: center; }
+            .slide-title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    <!-- header -->
+    <div class="slide-header">
+        <div class="slide-title">
+            <span>🧩 แบบทดสอบ</span>
+            <span style="font-size: 1.2rem; background: #dce5f0; padding: 0.1rem 1rem; border-radius: 40px;">เรียงสับเปลี่ยน & จัดหมู่</span>
+        </div>
+        <div class="slide-counter" id="slideCounter">1 / 8</div>
+    </div>
+
+    <!-- progress dots -->
+    <div class="progress-dots" id="progressDots"></div>
+
+    <!-- question area -->
+    <div id="questionArea">
+        <!-- dynamic -->
+    </div>
+
+    <!-- navigation + score -->
+    <div class="nav-area">
+        <button class="nav-btn" id="prevBtn">◀ ก่อนหน้า</button>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;">
+            <button class="reset-btn" id="resetBtn">⟳ เริ่มใหม่</button>
+            <span class="score-badge" id="scoreDisplay">✅ 0 / 8</span>
+        </div>
+        <button class="nav-btn" id="nextBtn">ถัดไป ▶</button>
+    </div>
+
+    <!-- credit line: 1 sentence -->
+    <div style="text-align: center; margin-top: 1.5rem;">
+        <div class="credit-line">
+            👩‍🏫 ครูตรวจสอบแล้ว · สร้างโดย DeepSeek และ OpenAI
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ----- 8 ข้อสอบ เรื่อง เรียงสับเปลี่ยน (Permutation) และ จัดหมู่ (Combination) -----
+        const quizzes = [
+            {
+                type: 'แนวคิด',
+                question: 'การเรียงสับเปลี่ยน (Permutation) แตกต่างจากการจัดหมู่ (Combination) อย่างไร?',
+                options: [
+                    'A) การเรียงสับเปลี่ยนให้ความสำคัญกับลำดับ ส่วนการจัดหมู่ไม่ให้ความสำคัญกับลำดับ',
+                    'B) การจัดหมู่ให้ความสำคัญกับลำดับ ส่วนการเรียงสับเปลี่ยนไม่ให้ความสำคัญกับลำดับ',
+                    'C) ทั้งสองแบบให้ความสำคัญกับลำดับเหมือนกัน',
+                    'D) ทั้งสองแบบไม่ให้ความสำคัญกับลำดับ'
+                ],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! Permutation = ลำดับสำคัญ (AB ≠ BA) ส่วน Combination = ลำดับไม่สำคัญ (AB = BA)'
+            },
+            {
+                type: 'แนวคิด',
+                question: 'ถ้าต้องการเลือกกรรมการ 3 คน จากนักเรียน 10 คน โดยไม่สนใจลำดับ ควรใช้แนวคิดใด?',
+                options: [
+                    'A) การเรียงสับเปลี่ยน (Permutation)',
+                    'B) การจัดหมู่ (Combination)',
+                    'C) ทั้งสองแบบใช้ได้',
+                    'D) ไม่ใช่ทั้งสองแบบ'
+                ],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! การเลือกโดยไม่สนใจลำดับ คือ การจัดหมู่ (Combination)'
+            },
+            {
+                type: 'คำนวณ',
+                question: 'มีหนังสือต่างกัน 5 เล่ม ต้องการจัดเรียงบนชั้น 3 เล่ม (โดยเรียงลำดับ) มีกี่วิธี?',
+                options: [
+                    'A) 10 วิธี',
+                    'B) 60 วิธี',
+                    'C) 120 วิธี',
+                    'D) 15 วิธี'
+                ],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! P(5,3) = 5×4×3 = 60 (เรียงสับเปลี่ยน, ลำดับสำคัญ)'
+            },
+            {
+                type: 'คำนวณ',
+                question: 'มีนักเรียน 8 คน ต้องการเลือก 3 คนไปทำกิจกรรม (ไม่จัดลำดับ) มีกี่วิธี?',
+                options: [
+                    'A) 56 วิธี',
+                    'B) 336 วิธี',
+                    'C) 24 วิธี',
+                    'D) 120 วิธี'
+                ],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! C(8,3) = 8!/(3!5!) = 56 (จัดหมู่, ลำดับไม่สำคัญ)'
+            },
+            {
+                type: 'คำนวณ',
+                question: 'มีตัวอักษร A, B, C, D, E นำมาจัดเรียงเป็นคำ 3 ตัวอักษร (ไม่ซ้ำกัน) ได้กี่คำ?',
+                options: [
+                    'A) 10 คำ',
+                    'B) 60 คำ',
+                    'C) 120 คำ',
+                    'D) 20 คำ'
+                ],
+                correct: 1,
+                explanation: '✅ ถูกต้อง! P(5,3) = 5×4×3 = 60 (เรียงสับเปลี่ยน, ลำดับสำคัญ)'
+            },
+            {
+                type: 'คำนวณ',
+                question: 'มีผลไม้ 6 ชนิด ต้องการเลือก 4 ชนิดมาทำสลัด (ไม่เรียงลำดับ) มีกี่วิธี?',
+                options: [
+                    'A) 15 วิธี',
+                    'B) 30 วิธี',
+                    'C) 360 วิธี',
+                    'D) 24 วิธี'
+                ],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! C(6,4) = 6!/(4!2!) = 15 (จัดหมู่, ลำดับไม่สำคัญ)'
+            },
+            {
+                type: 'ประยุกต์',
+                question: 'มีชาย 5 คน และหญิง 3 คน ต้องการเลือกคณะทำงาน 4 คน โดยมีหญิงอย่างน้อย 1 คน (ไม่จัดลำดับ) มีกี่วิธี?',
+                options: [
+                    'A) 65 วิธี',
+                    'B) 70 วิธี',
+                    'C) 50 วิธี',
+                    'D) 55 วิธี'
+                ],
+                correct: 0,
+                explanation: '✅ ถูกต้อง! รวม C(8,4) - C(5,4) = 70 - 5 = 65 (จัดหมู่, ลบกรณีที่ไม่มีหญิง)'
+            },
+            {
+                type: 'ประยุกต์',
+                question: 'มีรหัส 4 หลัก ใช้ตัวเลข 0-9 โดยตัวเลขซ้ำกันได้ และลำดับสำคัญ จะมีรหัสทั้งหมดกี่แบบ?',
+                options: [
+                    'A) 10,000 แบบ',
+                    'B) 5,040 แบบ',
+                    'C) 10,000 แบบ (ซ้ำได้ = 10^4)',
+                    'D) 210 แบบ'
+                ],
+                correct: 2,
+                explanation: '✅ ถูกต้อง! 10×10×10×10 = 10,000 (เรียงสับเปลี่ยนแบบซ้ำได้)'
+            }
+        ];
+
+        // ---- state ----
+        let currentIndex = 0;
+        let selectedAnswers = new Array(quizzes.length).fill(-1);   // -1 = ยังไม่เลือก
+        let answerStatus = new Array(quizzes.length).fill(null);   // 'correct' / 'wrong' / null
+
+        // DOM elements
+        const questionArea = document.getElementById('questionArea');
+        const slideCounter = document.getElementById('slideCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const progressDots = document.getElementById('progressDots');
+
+        // ---- functions ----
+        function renderSlide(index) {
+            const q = quizzes[index];
+            const selectedIdx = selectedAnswers[index];
+            const status = answerStatus[index];
+
+            // หัวข้อ
+            slideCounter.textContent = `${index+1} / ${quizzes.length}`;
+
+            // สร้าง HTML คำถาม
+            let optionsHtml = '';
+            for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+                let btnClass = 'option-btn';
+                let disabled = false;
+
+                if (selectedIdx !== -1) {
+                    disabled = true;
+                    // ถ้าตัวเลือกนี้คือคำตอบที่ผู้ใช้เลือก
+                    if (optIdx === selectedIdx) {
+                        btnClass += (status === 'correct') ? ' selected-correct' : ' selected-wrong';
+                    }
+                    // ถ้าตัวเลือกนี้คือคำตอบที่ถูกต้อง (แต่ไม่ใช่ที่เลือก) เราไม่ต้องไฮไลต์
+                    // แต่ถ้าต้องการแสดงให้รู้ว่าคำตอบที่ถูกคือข้อไหน? (ให้แสดงเฉพาะกรณีตอบผิด)
+                    if (status === 'wrong' && optIdx === q.correct) {
+                        btnClass += ' show-correct';  // แสดงคำตอบที่ถูกต้อง
+                    }
+                }
+
+                optionsHtml += `
+                    <button class="${btnClass}" data-opt-index="${optIdx}" ${disabled ? 'disabled' : ''}>
+                        ${q.options[optIdx]}
+                    </button>
+                `;
+            }
+
+            // feedback
+            let feedbackHtml = '';
+            if (selectedIdx !== -1) {
+                const isCorrect = (status === 'correct');
+                const icon = isCorrect ? '✅' : '❌';
+                const text = isCorrect ? 'ตอบถูก!' : 'ตอบผิด';
+                feedbackHtml = `
+                    <div class="feedback">
+                        <span class="highlight">${icon} ${text}</span>  ${q.explanation}
+                    </div>
+                `;
+            } else {
+                feedbackHtml = `<div class="feedback" style="background: transparent; border-left-color: #b0c8e0; color: #3f5a7a;">คลิกเลือกคำตอบ</div>`;
+            }
+
+            const tagColor = (q.type === 'แนวคิด') ? '#b0c8e0' : (q.type === 'คำนวณ' ? '#a8c4d4' : '#b8c8b0');
+
+            const html = `
+                <div class="question-box">
+                    <div class="question-tag" style="background: ${tagColor};">${q.type}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options-grid" id="optionsGrid">
+                        ${optionsHtml}
+                    </div>
+                    ${feedbackHtml}
+                </div>
+            `;
+
+            questionArea.innerHTML = html;
+
+            // attach event listeners to active option buttons
+            document.querySelectorAll('#optionsGrid .option-btn:not([disabled])').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const optIdx = parseInt(this.dataset.optIndex);
+                    handleAnswer(index, optIdx);
+                });
+            });
+
+            // update dots & nav buttons
+            updateDots();
+            updateNavButtons();
+            updateScore();
+        }
+
+        function handleAnswer(quizIdx, optIdx) {
+            if (selectedAnswers[quizIdx] !== -1) return; // already answered
+
+            const q = quizzes[quizIdx];
+            const isCorrect = (optIdx === q.correct);
+            selectedAnswers[quizIdx] = optIdx;
+            answerStatus[quizIdx] = isCorrect ? 'correct' : 'wrong';
+
+            renderSlide(currentIndex);
+        }
+
+        function updateDots() {
+            let html = '';
+            for (let i = 0; i < quizzes.length; i++) {
+                let cls = 'dot';
+                if (i === currentIndex) cls += ' active';
+                if (selectedAnswers[i] !== -1) {
+                    cls += (answerStatus[i] === 'correct') ? ' answered-correct' : ' answered-wrong';
+                }
+                html += `<div class="${cls}" data-index="${i}">${i+1}</div>`;
+            }
+            progressDots.innerHTML = html;
+
+            // click on dot -> go to that slide
+            document.querySelectorAll('.dot').forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    if (idx >= 0 && idx < quizzes.length) {
+                        currentIndex = idx;
+                        renderSlide(currentIndex);
+                    }
+                });
+            });
+        }
+
+        function updateNavButtons() {
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex === quizzes.length - 1);
+        }
+
+        function updateScore() {
+            let correct = 0;
+            for (let i = 0; i < quizzes.length; i++) {
+                if (answerStatus[i] === 'correct') correct++;
+            }
+            scoreDisplay.textContent = `✅ ${correct} / ${quizzes.length}`;
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderSlide(currentIndex);
+            }
+        }
+
+        function goToNext() {
+            if (currentIndex < quizzes.length - 1) {
+                currentIndex++;
+                renderSlide(currentIndex);
+            }
+        }
+
+        function resetAll() {
+            selectedAnswers = new Array(quizzes.length).fill(-1);
+            answerStatus = new Array(quizzes.length).fill(null);
+            currentIndex = 0;
+            renderSlide(0);
+        }
+
+        // ---- event listeners ----
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        resetBtn.addEventListener('click', resetAll);
+
+        // keyboard support (optional)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') goToPrev();
+            else if (e.key === 'ArrowRight') goToNext();
+        });
+
+        // ---- init ----
+        renderSlide(0);
+    })();
+</script>
+
+</body>
+</html>
