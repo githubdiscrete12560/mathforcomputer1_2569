@@ -60,31 +60,33 @@
         table {
             margin: 0 auto;
             border-collapse: collapse;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         th, td {
-            padding: 10px 18px;
+            padding: 8px 14px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             text-align: center;
         }
         th { background: rgba(255,255,255,0.08); }
+        .table-highlight { background: rgba(76, 175, 80, 0.12); }
+        .table-highlight-yellow { background: rgba(255, 235, 59, 0.1); }
 
         .sample-space-box {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
-            padding: 15px 0;
+            padding: 10px 0;
         }
         .dice-box {
             display: inline-block;
             background: rgba(255,255,255,0.08);
-            padding: 12px 18px;
+            padding: 10px 16px;
             border-radius: 10px;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin: 4px;
-            min-width: 50px;
+            margin: 3px;
+            min-width: 45px;
         }
         .dice-box.highlight {
             background: rgba(76, 175, 80, 0.25);
@@ -99,7 +101,10 @@
             border: 2px solid #f44336;
         }
         .dice-box.faded {
-            opacity: 0.3;
+            opacity: 0.25;
+        }
+        .dice-box.bordered {
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .arrow-symbol {
@@ -134,6 +139,51 @@
             padding: 12px 20px;
             border-radius: 8px;
             margin: 8px 0;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .table-wrap table {
+            font-size: 0.8rem;
+        }
+        .table-wrap td, .table-wrap th {
+            padding: 6px 10px;
+        }
+        .highlight-cell {
+            background: rgba(76, 175, 80, 0.15);
+            font-weight: bold;
+        }
+        .highlight-cell-red {
+            background: rgba(244, 67, 54, 0.1);
+        }
+        .grid-6x6 {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .grid-item {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 5px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .grid-item.highlight {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4caf50;
+            font-weight: bold;
+        }
+        .grid-item.highlight-yellow {
+            background: rgba(255, 235, 59, 0.15);
+            border: 2px solid #ffeb3b;
+        }
+        .grid-item.faded {
+            opacity: 0.2;
         }
     </style>
 </head>
@@ -251,10 +301,10 @@
             </section>
 
             <!-- ============================================ -->
-            <!-- สไลด์ที่ 4: ตัวอย่างลูกเต๋า (ไม่มีเงื่อนไข) -->
+            <!-- สไลด์ที่ 4: ตัวอย่างที่ 1 - ลูกเต๋า 1 ลูก (ไม่มีเงื่อนไข) -->
             <!-- ============================================ -->
             <section>
-                <h2>📝 ตัวอย่าง: ทอดลูกเต๋า 1 ลูก</h2>
+                <h2>📝 ตัวอย่างที่ 1: ทอดลูกเต๋า 1 ลูก</h2>
                 <br>
                 <div style="text-align:left; max-width:700px; margin:0 auto;">
                     <h4 style="color:#ffab40;">❌ ไม่มีเงื่อนไข</h4>
@@ -293,10 +343,10 @@
             </section>
 
             <!-- ============================================ -->
-            <!-- สไลด์ที่ 5: ตัวอย่างลูกเต๋า (มีเงื่อนไข) -->
+            <!-- สไลด์ที่ 5: ตัวอย่างที่ 1 - ลูกเต๋า 1 ลูก (มีเงื่อนไข) -->
             <!-- ============================================ -->
             <section>
-                <h2>📝 ตัวอย่าง: ทอดลูกเต๋า 1 ลูก</h2>
+                <h2>📝 ตัวอย่างที่ 1: ทอดลูกเต๋า 1 ลูก</h2>
                 <br>
                 <div style="text-align:left; max-width:700px; margin:0 auto;">
                     <h4 style="color:#4caf50;">✅ มีเงื่อนไข</h4>
@@ -348,57 +398,408 @@
             </section>
 
             <!-- ============================================ -->
-            <!-- สไลด์ที่ 6: แสดงให้เห็นการลดลงของ Sample Space -->
+            <!-- สไลด์ที่ 6: ตัวอย่างที่ 2 - ลูกเต๋า 2 ลูก (ไม่มีเงื่อนไข) -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📝 ตัวอย่างที่ 2: ทอดลูกเต๋า 2 ลูก</h2>
+                <br>
+                <div style="text-align:left; max-width:700px; margin:0 auto;">
+                    <h4 style="color:#ffab40;">❌ ไม่มีเงื่อนไข</h4>
+                    <p style="font-size:1.1rem;">
+                        <strong>โจทย์:</strong> โอกาสที่ <span class="highlight-yellow">ผลรวมของแต้มเป็น 7</span>
+                    </p>
+                </div>
+                <br>
+                <div class="box" style="background:rgba(255,255,255,0.04); max-width:600px; margin:0 auto;">
+                    <p style="font-size:0.9rem;">
+                        <strong>Sample Space (S):</strong> ผลลัพธ์ทั้งหมดจากการทอดลูกเต๋า 2 ลูก
+                    </p>
+                    <p style="font-size:1.2rem;">
+                        n(S) = 6 × 6 = <strong>36</strong>
+                    </p>
+                </div>
+                <br>
+                <div class="table-wrap">
+                    <table style="font-size:0.75rem;">
+                        <thead>
+                            <tr>
+                                <th>ลูกเต๋าลูกที่ 1 →<br>ลูกเต๋าลูกที่ 2 ↓</th>
+                                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><th>1</th>
+                                <td>(1,1)</td><td>(1,2)</td><td>(1,3)</td><td>(1,4)</td><td>(1,5)</td>
+                                <td class="highlight-cell">(1,6)</td>
+                            </tr>
+                            <tr><th>2</th>
+                                <td>(2,1)</td><td>(2,2)</td><td>(2,3)</td><td>(2,4)</td>
+                                <td class="highlight-cell">(2,5)</td><td>(2,6)</td>
+                            </tr>
+                            <tr><th>3</th>
+                                <td>(3,1)</td><td>(3,2)</td><td>(3,3)</td>
+                                <td class="highlight-cell">(3,4)</td><td>(3,5)</td><td>(3,6)</td>
+                            </tr>
+                            <tr><th>4</th>
+                                <td>(4,1)</td><td>(4,2)</td>
+                                <td class="highlight-cell">(4,3)</td><td>(4,4)</td><td>(4,5)</td><td>(4,6)</td>
+                            </tr>
+                            <tr><th>5</th>
+                                <td>(5,1)</td>
+                                <td class="highlight-cell">(5,2)</td><td>(5,3)</td><td>(5,4)</td><td>(5,5)</td><td>(5,6)</td>
+                            </tr>
+                            <tr><th>6</th>
+                                <td class="highlight-cell">(6,1)</td><td>(6,2)</td><td>(6,3)</td><td>(6,4)</td><td>(6,5)</td><td>(6,6)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:0.8rem; opacity:0.7; margin-top:5px;">
+                    🟩 เซลล์สีเขียว = ผลรวมเป็น 7 (E)
+                </p>
+                <br>
+                <div class="two-col">
+                    <div class="col col-no-condition">
+                        <p><strong>E</strong> = ผลรวมเป็น 7</p>
+                        <p>n(E) = <strong>6</strong> วิธี</p>
+                    </div>
+                    <div class="col col-no-condition">
+                        <p><strong>P(E)</strong> = 6/36</p>
+                        <p style="font-size:1.8rem; color:#ffab40;">= <strong>1/6 ≈ 0.1667</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 7: ตัวอย่างที่ 2 - ลูกเต๋า 2 ลูก (มีเงื่อนไข) -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📝 ตัวอย่างที่ 2: ทอดลูกเต๋า 2 ลูก</h2>
+                <br>
+                <div style="text-align:left; max-width:700px; margin:0 auto;">
+                    <h4 style="color:#4caf50;">✅ มีเงื่อนไข</h4>
+                    <p style="font-size:1.1rem;">
+                        <strong>โจทย์:</strong> โอกาสที่ผลรวมเป็น 7 <span class="highlight-yellow">เมื่อรู้ว่าลูกแรกออกแต้ม 4</span>
+                    </p>
+                </div>
+                <br>
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap;">
+                    <div>
+                        <p style="font-size:0.9rem; opacity:0.7;">Sample Space เต็ม (36 วิธี)</p>
+                        <div class="grid-6x6" style="max-width:300px; grid-template-columns:repeat(6, 1fr); gap:3px;">
+                            <div class="grid-item" style="font-size:0.6rem;">1,1</div>
+                            <div class="grid-item" style="font-size:0.6rem;">1,2</div>
+                            <div class="grid-item" style="font-size:0.6rem;">1,3</div>
+                            <div class="grid-item" style="font-size:0.6rem;">1,4</div>
+                            <div class="grid-item" style="font-size:0.6rem;">1,5</div>
+                            <div class="grid-item" style="font-size:0.6rem;">1,6</div>
+                            <div class="grid-item" style="font-size:0.6rem;">2,1</div>
+                            <div class="grid-item" style="font-size:0.6rem;">2,2</div>
+                            <div class="grid-item" style="font-size:0.6rem;">2,3</div>
+                            <div class="grid-item" style="font-size:0.6rem;">2,4</div>
+                            <div class="grid-item" style="font-size:0.6rem;">2,5</div>
+                            <div class="grid-item" style="font-size:0.6rem;">2,6</div>
+                            <div class="grid-item" style="font-size:0.6rem;">3,1</div>
+                            <div class="grid-item" style="font-size:0.6rem;">3,2</div>
+                            <div class="grid-item" style="font-size:0.6rem;">3,3</div>
+                            <div class="grid-item" style="font-size:0.6rem;">3,4</div>
+                            <div class="grid-item" style="font-size:0.6rem;">3,5</div>
+                            <div class="grid-item" style="font-size:0.6rem;">3,6</div>
+                            <div class="grid-item highlight" style="font-size:0.6rem; background:rgba(76,175,80,0.15);">4,1</div>
+                            <div class="grid-item highlight" style="font-size:0.6rem; background:rgba(76,175,80,0.15);">4,2</div>
+                            <div class="grid-item highlight" style="font-size:0.6rem; background:rgba(76,175,80,0.15);">4,3</div>
+                            <div class="grid-item highlight" style="font-size:0.6rem; background:rgba(76,175,80,0.15);">4,4</div>
+                            <div class="grid-item highlight" style="font-size:0.6rem; background:rgba(76,175,80,0.15);">4,5</div>
+                            <div class="grid-item highlight highlight-yellow" style="font-size:0.6rem; background:rgba(76,175,80,0.3); border-color:#ffeb3b;">4,6</div>
+                            <div class="grid-item" style="font-size:0.6rem;">5,1</div>
+                            <div class="grid-item" style="font-size:0.6rem;">5,2</div>
+                            <div class="grid-item" style="font-size:0.6rem;">5,3</div>
+                            <div class="grid-item" style="font-size:0.6rem;">5,4</div>
+                            <div class="grid-item" style="font-size:0.6rem;">5,5</div>
+                            <div class="grid-item" style="font-size:0.6rem;">5,6</div>
+                            <div class="grid-item" style="font-size:0.6rem;">6,1</div>
+                            <div class="grid-item" style="font-size:0.6rem;">6,2</div>
+                            <div class="grid-item" style="font-size:0.6rem;">6,3</div>
+                            <div class="grid-item" style="font-size:0.6rem;">6,4</div>
+                            <div class="grid-item" style="font-size:0.6rem;">6,5</div>
+                            <div class="grid-item" style="font-size:0.6rem;">6,6</div>
+                        </div>
+                    </div>
+                    <div class="arrow-symbol" style="font-size:2rem;">⬇</div>
+                    <div>
+                        <p style="font-size:0.9rem; color:#4caf50;">Sample Space ใหม่ (F)</p>
+                        <div style="display:flex; flex-direction:column; gap:5px; background:rgba(76,175,80,0.08); padding:20px; border-radius:16px; border:2px solid #4caf50;">
+                            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                                <span style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:6px;">4,1</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:6px;">4,2</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:6px;">4,3</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:6px;">4,4</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:6px;">4,5</span>
+                                <span style="background:rgba(255,235,59,0.15); padding:6px 12px; border-radius:6px; border:2px solid #ffeb3b; font-weight:bold;">4,6</span>
+                            </div>
+                            <p style="font-size:1.1rem; margin-top:5px;">
+                                n(F) = <strong style="color:#4caf50;">6</strong>
+                            </p>
+                            <p style="font-size:0.8rem; opacity:0.6;">
+                                🟡 4,6 = ผลรวมเป็น 7 (E ∩ F)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="two-col">
+                    <div class="col col-condition">
+                        <p><strong>F</strong> = ลูกแรกออก 4</p>
+                        <p>n(F) = <strong>6</strong> (จาก 36)</p>
+                    </div>
+                    <div class="col col-condition">
+                        <p><strong>E ∩ F</strong> = ผลรวมเป็น 7 <br>และลูกแรกเป็น 4</p>
+                        <p>→ (4,6) เท่านั้น</p>
+                        <p>n(E ∩ F) = <strong>1</strong></p>
+                    </div>
+                </div>
+                <br>
+                <div class="formula-box" style="background:rgba(76,175,80,0.1);">
+                    P(E | F) = 1/6 = <span class="highlight-green">0.1667</span>
+                </div>
+                <p style="font-size:0.9rem; opacity:0.6;">
+                    📌 เปรียบเทียบ: ไม่มีเงื่อนไข = 1/6 ≈ 0.1667 (เหมือนกัน! ในกรณีนี้)
+                </p>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 8: ตัวอย่างที่ 3 - ลูกเต๋า 2 ลูก (เงื่อนไขอื่น) -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📝 ตัวอย่างที่ 3: ทอดลูกเต๋า 2 ลูก</h2>
+                <br>
+                <div style="text-align:left; max-width:700px; margin:0 auto;">
+                    <h4 style="color:#4caf50;">✅ มีเงื่อนไข</h4>
+                    <p style="font-size:1.1rem;">
+                        <strong>โจทย์:</strong> โอกาสที่ผลรวมเป็น 7 <span class="highlight-yellow">เมื่อรู้ว่าผลรวมมากกว่า 5</span>
+                    </p>
+                </div>
+                <br>
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap;">
+                    <div>
+                        <p style="font-size:0.9rem; opacity:0.7;">Sample Space เต็ม (36 วิธี)</p>
+                        <div class="grid-6x6" style="max-width:300px; grid-template-columns:repeat(6, 1fr); gap:3px;">
+                            <div class="grid-item faded" style="font-size:0.55rem;">1,1</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">1,2</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">1,3</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">1,4</div>
+                            <div class="grid-item" style="font-size:0.55rem;">1,5</div>
+                            <div class="grid-item" style="font-size:0.55rem;">1,6</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">2,1</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">2,2</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">2,3</div>
+                            <div class="grid-item" style="font-size:0.55rem;">2,4</div>
+                            <div class="grid-item" style="font-size:0.55rem;">2,5</div>
+                            <div class="grid-item" style="font-size:0.55rem;">2,6</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">3,1</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">3,2</div>
+                            <div class="grid-item" style="font-size:0.55rem;">3,3</div>
+                            <div class="grid-item" style="font-size:0.55rem;">3,4</div>
+                            <div class="grid-item" style="font-size:0.55rem;">3,5</div>
+                            <div class="grid-item" style="font-size:0.55rem;">3,6</div>
+                            <div class="grid-item faded" style="font-size:0.55rem;">4,1</div>
+                            <div class="grid-item" style="font-size:0.55rem;">4,2</div>
+                            <div class="grid-item" style="font-size:0.55rem;">4,3</div>
+                            <div class="grid-item" style="font-size:0.55rem;">4,4</div>
+                            <div class="grid-item" style="font-size:0.55rem;">4,5</div>
+                            <div class="grid-item" style="font-size:0.55rem;">4,6</div>
+                            <div class="grid-item" style="font-size:0.55rem;">5,1</div>
+                            <div class="grid-item" style="font-size:0.55rem;">5,2</div>
+                            <div class="grid-item" style="font-size:0.55rem;">5,3</div>
+                            <div class="grid-item" style="font-size:0.55rem;">5,4</div>
+                            <div class="grid-item" style="font-size:0.55rem;">5,5</div>
+                            <div class="grid-item" style="font-size:0.55rem;">5,6</div>
+                            <div class="grid-item" style="font-size:0.55rem;">6,1</div>
+                            <div class="grid-item" style="font-size:0.55rem;">6,2</div>
+                            <div class="grid-item" style="font-size:0.55rem;">6,3</div>
+                            <div class="grid-item" style="font-size:0.55rem;">6,4</div>
+                            <div class="grid-item" style="font-size:0.55rem;">6,5</div>
+                            <div class="grid-item" style="font-size:0.55rem;">6,6</div>
+                        </div>
+                        <p style="font-size:0.7rem; opacity:0.5; margin-top:3px;">▢ = ผลรวม > 5 (F) &nbsp;|&nbsp; ▢ = ผลรวม ≤ 5 (ตัดทิ้ง)</p>
+                    </div>
+                    <div class="arrow-symbol" style="font-size:2rem;">⬇</div>
+                    <div>
+                        <p style="font-size:0.9rem; color:#4caf50;">Sample Space ใหม่ (F)</p>
+                        <div style="display:flex; flex-direction:column; gap:3px; background:rgba(76,175,80,0.08); padding:15px; border-radius:16px; border:2px solid #4caf50; max-width:250px;">
+                            <div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; font-size:0.7rem;">
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">1,5</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">1,6</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">2,4</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">2,5</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">2,6</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">3,3</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">3,4</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">3,5</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">3,6</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">4,2</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">4,3</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">4,4</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">4,5</span>
+                                <span style="background:rgba(255,235,59,0.15); padding:3px 8px; border-radius:4px; border:1px solid #ffeb3b; font-weight:bold;">4,6</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">5,1</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">5,2</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">5,3</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">5,4</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">5,5</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">5,6</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">6,1</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">6,2</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">6,3</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">6,4</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">6,5</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px;">6,6</span>
+                            </div>
+                            <p style="font-size:1.1rem; margin-top:3px;">
+                                n(F) = <strong style="color:#4caf50;">26</strong> (จาก 36)
+                            </p>
+                            <p style="font-size:0.8rem; opacity:0.6;">
+                                🟡 เซลล์สีเหลือง = ผลรวมเป็น 7 (E ∩ F)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div style="display:flex; justify-content:center; gap:30px; flex-wrap:wrap; font-size:1rem;">
+                    <div style="background:rgba(255,255,255,0.04); padding:10px 20px; border-radius:8px;">
+                        <p><strong>E ∩ F</strong> = ผลรวมเป็น 7 และ >5</p>
+                        <p>n(E ∩ F) = <strong>6</strong> วิธี <span style="font-size:0.8rem; opacity:0.6;">(เหมือนเดิม)</span></p>
+                    </div>
+                    <div style="background:rgba(76,175,80,0.04); padding:10px 20px; border-radius:8px; border:1px solid #4caf50;">
+                        <p style="font-size:1.2rem; color:#4caf50;">
+                            P(E | F) = 6/26 = <strong>3/13 ≈ 0.2308</strong>
+                        </p>
+                        <p style="font-size:0.8rem; opacity:0.6;">
+                            📌 เปรียบเทียบ: ไม่มีเงื่อนไข = 6/36 = 1/6 ≈ 0.1667
+                        </p>
+                    </div>
+                </div>
+                <div class="box" style="background:rgba(255,235,59,0.04); margin-top:10px;">
+                    <p style="font-size:1rem;">
+                        🔍 <span class="highlight-yellow">Sample Space ลดลงจาก 36 เหลือ 26</span> 
+                        → ความน่าจะเป็นเพิ่มขึ้นจาก 0.1667 เป็น 0.2308
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 9: แสดงการลดลงของ Sample Space -->
             <!-- ============================================ -->
             <section>
                 <h2>📉 Sample Space ลดลงอย่างไร?</h2>
                 <br>
-                <div style="display:flex; justify-content:center; align-items:center; gap:30px; flex-wrap:wrap;">
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap;">
                     <div style="text-align:center;">
                         <p style="font-size:1rem; color:#ffab40;">ไม่มีเงื่อนไข</p>
-                        <div style="display:inline-block; background:rgba(255,171,64,0.08); padding:20px 25px; border-radius:16px; border:2px solid #ffab40;">
-                            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">1</span>
-                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">2</span>
-                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">3</span>
-                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">4</span>
-                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">5</span>
-                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">6</span>
+                        <div style="display:inline-block; background:rgba(255,171,64,0.06); padding:15px 20px; border-radius:16px; border:2px solid #ffab40;">
+                            <div style="display:grid; grid-template-columns:repeat(6, 35px); gap:3px; margin:0 auto;">
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">1</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">2</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">3</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">4</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">5</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">6</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">7</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">8</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">9</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">10</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">11</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">12</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">13</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">14</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">15</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">16</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">17</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">18</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">19</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">20</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">21</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">22</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">23</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">24</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">25</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">26</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">27</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">28</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">29</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">30</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">31</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">32</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">33</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">34</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">35</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">36</div>
                             </div>
-                            <p style="font-size:1.2rem; margin-top:10px;">n(S) = <strong>6</strong></p>
+                            <p style="font-size:1.2rem; margin-top:8px;">n(S) = <strong>36</strong></p>
                         </div>
                     </div>
 
-                    <div style="font-size:3rem; color:#ffeb3b;">⬇</div>
+                    <div style="font-size:2.5rem; color:#ffeb3b;">⬇</div>
 
                     <div style="text-align:center;">
-                        <p style="font-size:1rem; color:#4caf50;">มีเงื่อนไข (F = มากกว่า 3)</p>
-                        <div style="display:inline-block; background:rgba(76,175,80,0.08); padding:20px 25px; border-radius:16px; border:2px solid #4caf50;">
-                            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-                                <span style="background:rgba(255,255,255,0.05); padding:8px 14px; border-radius:8px; opacity:0.3;">1</span>
-                                <span style="background:rgba(255,255,255,0.05); padding:8px 14px; border-radius:8px; opacity:0.3;">2</span>
-                                <span style="background:rgba(255,255,255,0.05); padding:8px 14px; border-radius:8px; opacity:0.3;">3</span>
-                                <span style="background:rgba(76,175,80,0.2); padding:8px 14px; border-radius:8px; border:2px solid #4caf50;">4</span>
-                                <span style="background:rgba(76,175,80,0.2); padding:8px 14px; border-radius:8px; border:2px solid #4caf50;">5</span>
-                                <span style="background:rgba(76,175,80,0.2); padding:8px 14px; border-radius:8px; border:2px solid #4caf50;">6</span>
+                        <p style="font-size:1rem; color:#4caf50;">มีเงื่อนไข (ผลรวม > 5)</p>
+                        <div style="display:inline-block; background:rgba(76,175,80,0.06); padding:15px 20px; border-radius:16px; border:2px solid #4caf50;">
+                            <div style="display:grid; grid-template-columns:repeat(6, 35px); gap:3px; margin:0 auto;">
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">1</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">2</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">3</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">4</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">5</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">6</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">7</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">8</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">9</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">10</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">11</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">12</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">13</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">14</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">15</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">16</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">17</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">18</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem; opacity:0.15;">19</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">20</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">21</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">22</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">23</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">24</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">25</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">26</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">27</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">28</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">29</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">30</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">31</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">32</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">33</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">34</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">35</div>
+                                <div style="background:rgba(255,255,255,0.05); padding:5px; border-radius:4px; text-align:center; font-size:0.6rem;">36</div>
                             </div>
-                            <p style="font-size:1.2rem; margin-top:10px;">n(F) = <strong style="color:#4caf50;">3</strong></p>
+                            <p style="font-size:1.2rem; margin-top:8px;">n(F) = <strong style="color:#4caf50;">26</strong></p>
+                            <p style="font-size:0.7rem; opacity:0.5;">▢ = ตัดทิ้ง (ผลรวม ≤ 5)</p>
                         </div>
                     </div>
                 </div>
                 <br>
                 <div class="key-point">
                     <p style="font-size:1.2rem;">
-                        🔽 <span class="highlight-yellow">Sample Space ลดลงจาก 6 เหลือ 3</span>
+                        🔽 <span class="highlight-yellow">Sample Space ลดลงจาก 36 เหลือ 26</span>
                     </p>
                     <p style="font-size:0.95rem; opacity:0.7;">
-                        เพราะเรารู้แล้วว่าแต้มต้องมากกว่า 3 → ตัด 1,2,3 ทิ้งไปเลย!
+                        เพราะเรารู้แล้วว่าผลรวม > 5 → ตัด 10 กรณีที่มีผลรวม ≤ 5 ทิ้งไป!
                     </p>
                 </div>
             </section>
 
             <!-- ============================================ -->
-            <!-- สไลด์ที่ 7: สรุปภาพรวม -->
+            <!-- สไลด์ที่ 10: สรุปภาพรวม -->
             <!-- ============================================ -->
             <section>
                 <h2>🔍 สรุปภาพรวม</h2>
@@ -442,7 +843,7 @@
             </section>
 
             <!-- ============================================ -->
-            <!-- สไลด์ที่ 8: ข้อควรจำ -->
+            <!-- สไลด์ที่ 11: ข้อควรจำ -->
             <!-- ============================================ -->
             <section>
                 <h2>🎯 ข้อควรจำ</h2>
