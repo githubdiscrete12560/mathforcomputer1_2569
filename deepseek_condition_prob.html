@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ความน่าจะเป็นแบบมีเงื่อนไข (Conditional Probability)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+    <style>
+        .highlight-green { color: #4caf50; font-weight: bold; }
+        .highlight-red { color: #f44336; font-weight: bold; }
+        .highlight-yellow { color: #ffeb3b; font-weight: bold; }
+        .highlight-cyan { color: #80deea; font-weight: bold; }
+        .highlight-orange { color: #ffab40; font-weight: bold; }
+        .highlight-pink { color: #f48fb1; font-weight: bold; }
+
+        .box {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+
+        .two-col {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .col {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 25px;
+            border-radius: 12px;
+            min-width: 250px;
+            flex: 1;
+            max-width: 500px;
+        }
+        .col-no-condition { border-top: 6px solid #ffab40; }
+        .col-condition { border-top: 6px solid #4caf50; }
+
+        .formula-box {
+            background: rgba(255, 235, 59, 0.1);
+            padding: 15px 30px;
+            border-radius: 16px;
+            font-size: 1.6rem;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .tag-no { background: #ffab40; color: #000; }
+        .tag-condition { background: #4caf50; color: #fff; }
+
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+        th, td {
+            padding: 10px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        th { background: rgba(255,255,255,0.08); }
+
+        .sample-space-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 15px 0;
+        }
+        .dice-box {
+            display: inline-block;
+            background: rgba(255,255,255,0.08);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 4px;
+            min-width: 50px;
+        }
+        .dice-box.highlight {
+            background: rgba(76, 175, 80, 0.25);
+            border: 2px solid #4caf50;
+        }
+        .dice-box.highlight-yellow {
+            background: rgba(255, 235, 59, 0.2);
+            border: 2px solid #ffeb3b;
+        }
+        .dice-box.highlight-red {
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+        }
+        .dice-box.faded {
+            opacity: 0.3;
+        }
+
+        .arrow-symbol {
+            font-size: 2.5rem;
+            color: #ffeb3b;
+        }
+
+        .result-big {
+            font-size: 2.2rem;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+
+        .footer-note {
+            font-size: 0.85rem;
+            opacity: 0.6;
+            margin-top: 25px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .comparison-table th {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .key-point {
+            background: rgba(255, 235, 59, 0.06);
+            border-left: 5px solid #ffeb3b;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 1: หัวข้อ -->
+            <!-- ============================================ -->
+            <section>
+                <h1 style="font-size:2.8rem;">🎲 ความน่าจะเป็นแบบมีเงื่อนไข</h1>
+                <h2 style="color:#80deea;">Conditional Probability</h2>
+                <br>
+                <div class="formula-box">
+                    P(E | F) = P(E ∩ F) / P(F)
+                </div>
+                <br>
+                <div class="box">
+                    <p style="font-size:1.2rem;">
+                        <span class="highlight-yellow">P(E | F)</span> = ความน่าจะเป็นที่ E จะเกิดขึ้น <br>
+                        <span class="highlight-cyan">เมื่อรู้ว่า F เกิดขึ้นแล้ว</span>
+                    </p>
+                </div>
+                <br>
+                <p style="font-size:1.2rem;">
+                    ⭐ <span class="highlight-green">Sample Space ลดลง!</span> เมื่อมีเงื่อนไข
+                </p>
+                <p class="footer-note">ใช้ ← → หรือ Space เพื่อเลื่อนสไลด์</p>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 2: ส่วนประกอบของสูตร -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📐 ส่วนประกอบของสูตร</h2>
+                <br>
+                <div class="formula-box" style="font-size:1.8rem;">
+                    P(E | F) = P(E ∩ F) / P(F)
+                </div>
+                <br>
+                <div class="two-col">
+                    <div class="col" style="border-top:6px solid #ffeb3b;">
+                        <h4 style="color:#ffeb3b;">P(F)</h4>
+                        <p style="font-size:1.2rem;">ความน่าจะเป็นของ F</p>
+                        <p style="font-size:0.9rem; opacity:0.7;">ใช้เป็น <span class="highlight-yellow">ตัวหาร</span></p>
+                        <p style="font-size:0.9rem; opacity:0.7;">→ n(F) / n(S)</p>
+                    </div>
+                    <div class="col" style="border-top:6px solid #80deea;">
+                        <h4 style="color:#80deea;">P(E ∩ F)</h4>
+                        <p style="font-size:1.2rem;">ความน่าจะเป็นที่ <br>E และ F เกิดขึ้นพร้อมกัน</p>
+                        <p style="font-size:0.9rem; opacity:0.7;">ใช้เป็น <span class="highlight-cyan">ตัวเศษ</span></p>
+                        <p style="font-size:0.9rem; opacity:0.7;">→ n(E ∩ F) / n(S)</p>
+                    </div>
+                </div>
+                <br>
+                <div class="box" style="background:rgba(255,235,59,0.04);">
+                    <p style="font-size:0.95rem;">
+                        💡 เมื่อหารกันแล้ว n(S) <span class="highlight-yellow">ตัดกัน</span> เหลือ <strong>n(E ∩ F) / n(F)</strong>
+                    </p>
+                    <p style="font-size:0.95rem;">
+                        → นั่นคือ <span class="highlight-green">Sample Space กลายเป็น n(F)</span> นั่นเอง!
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 3: หลักการสำคัญ (ตารางเปรียบเทียบ) -->
+            <!-- ============================================ -->
+            <section>
+                <h2>🧠 หลักการสำคัญ</h2>
+                <br>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25%;">📌</th>
+                            <th style="width:37.5%; background:rgba(255,171,64,0.1);">
+                                <span class="tag tag-no">ไม่มีเงื่อนไข</span>
+                            </th>
+                            <th style="width:37.5%; background:rgba(76,175,80,0.1);">
+                                <span class="tag tag-condition">มีเงื่อนไข (F เกิดขึ้นแล้ว)</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Sample Space (S)</strong></td>
+                            <td>กรณีทั้งหมดที่เป็นไปได้</td>
+                            <td style="color:#4caf50;"><strong>ลดลงเหลือเฉพาะกรณีที่ F เกิดขึ้น</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ตัวส่วน</strong></td>
+                            <td>n(S) ทั้งหมด</td>
+                            <td style="color:#4caf50;">n(F) (แค่กรณีที่ F เกิดขึ้น)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ตัวเศษ</strong></td>
+                            <td>n(E)</td>
+                            <td style="color:#4caf50;">n(E ∩ F) (แค่กรณีที่ E เกิดขึ้นร่วมกับ F)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ความน่าจะเป็น</strong></td>
+                            <td>P(E) = n(E)/n(S)</td>
+                            <td style="color:#4caf50;">P(E|F) = n(E∩F)/n(F)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="key-point">
+                    <p style="font-size:1.1rem;">
+                        🔑 <strong>หัวใจสำคัญ:</strong> เมื่อมีเงื่อนไข <span class="highlight-yellow">Sample Space จะเล็กลง</span> 
+                        เพราะเราตัดกรณีที่ไม่ตรงกับ F ออกไป
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 4: ตัวอย่างลูกเต๋า (ไม่มีเงื่อนไข) -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📝 ตัวอย่าง: ทอดลูกเต๋า 1 ลูก</h2>
+                <br>
+                <div style="text-align:left; max-width:700px; margin:0 auto;">
+                    <h4 style="color:#ffab40;">❌ ไม่มีเงื่อนไข</h4>
+                    <p style="font-size:1.1rem;">
+                        <strong>โจทย์:</strong> โอกาสได้แต้มคู่
+                    </p>
+                </div>
+                <br>
+                <div class="sample-space-box">
+                    <div class="dice-box highlight-yellow">1</div>
+                    <div class="dice-box highlight-green">2</div>
+                    <div class="dice-box highlight-yellow">3</div>
+                    <div class="dice-box highlight-green">4</div>
+                    <div class="dice-box highlight-yellow">5</div>
+                    <div class="dice-box highlight-green">6</div>
+                </div>
+                <div style="display:flex; justify-content:center; gap:30px; flex-wrap:wrap; font-size:1.1rem;">
+                    <div><span style="color:#ffeb3b;">⬜ แต้มคี่</span></div>
+                    <div><span style="color:#4caf50;">⬜ แต้มคู่ (E)</span></div>
+                </div>
+                <br>
+                <div class="two-col">
+                    <div class="col col-no-condition">
+                        <p><strong>S</strong> = {1,2,3,4,5,6}</p>
+                        <p>n(S) = <strong>6</strong></p>
+                    </div>
+                    <div class="col col-no-condition">
+                        <p><strong>E</strong> = {2,4,6}</p>
+                        <p>n(E) = <strong>3</strong></p>
+                    </div>
+                </div>
+                <br>
+                <div class="formula-box" style="background:rgba(255,171,64,0.1);">
+                    P(E) = 3/6 = <span class="highlight-orange">0.5</span>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 5: ตัวอย่างลูกเต๋า (มีเงื่อนไข) -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📝 ตัวอย่าง: ทอดลูกเต๋า 1 ลูก</h2>
+                <br>
+                <div style="text-align:left; max-width:700px; margin:0 auto;">
+                    <h4 style="color:#4caf50;">✅ มีเงื่อนไข</h4>
+                    <p style="font-size:1.1rem;">
+                        <strong>โจทย์:</strong> โอกาสได้แต้มคู่ <span class="highlight-yellow">เมื่อรู้ว่าแต้มที่ได้มากกว่า 3</span>
+                    </p>
+                </div>
+                <br>
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap;">
+                    <div>
+                        <p style="font-size:0.9rem; opacity:0.7;">Sample Space เต็ม</p>
+                        <div class="sample-space-box">
+                            <div class="dice-box faded">1</div>
+                            <div class="dice-box faded">2</div>
+                            <div class="dice-box faded">3</div>
+                            <div class="dice-box highlight">4</div>
+                            <div class="dice-box highlight">5</div>
+                            <div class="dice-box highlight">6</div>
+                        </div>
+                    </div>
+                    <div class="arrow-symbol">→</div>
+                    <div>
+                        <p style="font-size:0.9rem; color:#4caf50;">Sample Space ใหม่ (F)</p>
+                        <div class="sample-space-box">
+                            <div class="dice-box highlight" style="background:rgba(255,255,255,0.05);">4</div>
+                            <div class="dice-box highlight" style="background:rgba(255,255,255,0.05);">5</div>
+                            <div class="dice-box highlight" style="background:rgba(255,255,255,0.05);">6</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="two-col">
+                    <div class="col col-condition">
+                        <p><strong>F</strong> = {4,5,6}</p>
+                        <p>n(F) = <strong>3</strong> <span style="color:#4caf50;">✅ ลดลงจาก 6</span></p>
+                    </div>
+                    <div class="col col-condition">
+                        <p><strong>E ∩ F</strong> = {4,6}</p>
+                        <p>n(E ∩ F) = <strong>2</strong></p>
+                    </div>
+                </div>
+                <br>
+                <div class="formula-box" style="background:rgba(76,175,80,0.1);">
+                    P(E | F) = 2/3 = <span class="highlight-green">0.6667</span>
+                </div>
+                <p style="font-size:0.9rem; opacity:0.6;">
+                    📌 เปรียบเทียบ: ไม่มีเงื่อนไข = 0.5, มีเงื่อนไข = 0.6667
+                </p>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 6: แสดงให้เห็นการลดลงของ Sample Space -->
+            <!-- ============================================ -->
+            <section>
+                <h2>📉 Sample Space ลดลงอย่างไร?</h2>
+                <br>
+                <div style="display:flex; justify-content:center; align-items:center; gap:30px; flex-wrap:wrap;">
+                    <div style="text-align:center;">
+                        <p style="font-size:1rem; color:#ffab40;">ไม่มีเงื่อนไข</p>
+                        <div style="display:inline-block; background:rgba(255,171,64,0.08); padding:20px 25px; border-radius:16px; border:2px solid #ffab40;">
+                            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">1</span>
+                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">2</span>
+                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">3</span>
+                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">4</span>
+                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">5</span>
+                                <span style="background:rgba(255,255,255,0.08); padding:8px 14px; border-radius:8px;">6</span>
+                            </div>
+                            <p style="font-size:1.2rem; margin-top:10px;">n(S) = <strong>6</strong></p>
+                        </div>
+                    </div>
+
+                    <div style="font-size:3rem; color:#ffeb3b;">⬇</div>
+
+                    <div style="text-align:center;">
+                        <p style="font-size:1rem; color:#4caf50;">มีเงื่อนไข (F = มากกว่า 3)</p>
+                        <div style="display:inline-block; background:rgba(76,175,80,0.08); padding:20px 25px; border-radius:16px; border:2px solid #4caf50;">
+                            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+                                <span style="background:rgba(255,255,255,0.05); padding:8px 14px; border-radius:8px; opacity:0.3;">1</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:8px 14px; border-radius:8px; opacity:0.3;">2</span>
+                                <span style="background:rgba(255,255,255,0.05); padding:8px 14px; border-radius:8px; opacity:0.3;">3</span>
+                                <span style="background:rgba(76,175,80,0.2); padding:8px 14px; border-radius:8px; border:2px solid #4caf50;">4</span>
+                                <span style="background:rgba(76,175,80,0.2); padding:8px 14px; border-radius:8px; border:2px solid #4caf50;">5</span>
+                                <span style="background:rgba(76,175,80,0.2); padding:8px 14px; border-radius:8px; border:2px solid #4caf50;">6</span>
+                            </div>
+                            <p style="font-size:1.2rem; margin-top:10px;">n(F) = <strong style="color:#4caf50;">3</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="key-point">
+                    <p style="font-size:1.2rem;">
+                        🔽 <span class="highlight-yellow">Sample Space ลดลงจาก 6 เหลือ 3</span>
+                    </p>
+                    <p style="font-size:0.95rem; opacity:0.7;">
+                        เพราะเรารู้แล้วว่าแต้มต้องมากกว่า 3 → ตัด 1,2,3 ทิ้งไปเลย!
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 7: สรุปภาพรวม -->
+            <!-- ============================================ -->
+            <section>
+                <h2>🔍 สรุปภาพรวม</h2>
+                <br>
+                <table style="max-width:750px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">คำถาม</th>
+                            <th>คำตอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left;">Conditional Probability ลด Sample Space ไหม?</td>
+                            <td style="color:#4caf50; font-weight:bold;">ใช่ ✅</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">ตัวส่วนเปลี่ยนจาก n(S) เป็นอะไร?</td>
+                            <td><span class="highlight-cyan">n(F)</span> (จำนวนวิธีที่ F เกิดขึ้น)</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">ตัวเศษเปลี่ยนจาก n(E) เป็นอะไร?</td>
+                            <td><span class="highlight-cyan">n(E ∩ F)</span> (จำนวนวิธีที่ E และ F เกิดขึ้นพร้อมกัน)</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">ทำไมต้องลด?</td>
+                            <td>เพราะเรามีข้อมูลเพิ่มขึ้น → ขอบเขตแคบลง → ความน่าจะเป็นเปลี่ยนไป</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="box" style="background:rgba(255,235,59,0.06); border:2px dashed #ffeb3b;">
+                    <p style="font-size:1.2rem;">
+                        💡 <span class="highlight-yellow">Conditional Probability</span> 
+                        = ความน่าจะเป็นใน <span class="highlight-cyan">"โลกที่แคบลง"</span>
+                    </p>
+                    <p style="font-size:1rem; opacity:0.7;">
+                        เมื่อเรารู้ว่ามีอะไรเกิดขึ้นแล้ว เราก็ไม่ต้องสนใจกรณีอื่น ๆ อีกต่อไป
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- สไลด์ที่ 8: ข้อควรจำ -->
+            <!-- ============================================ -->
+            <section>
+                <h2>🎯 ข้อควรจำ</h2>
+                <br>
+                <div style="display:flex; flex-direction:column; gap:15px; max-width:700px; margin:0 auto;">
+                    <div style="background:rgba(76,175,80,0.06); padding:15px 25px; border-radius:10px; border-left:6px solid #4caf50;">
+                        <p style="font-size:1.2rem;">
+                            📌 <strong>P(E | F)</strong> = ความน่าจะเป็นของ E <span class="highlight-yellow">ในโลกของ F</span>
+                        </p>
+                    </div>
+                    <div style="background:rgba(255,171,64,0.06); padding:15px 25px; border-radius:10px; border-left:6px solid #ffab40;">
+                        <p style="font-size:1.2rem;">
+                            📌 <strong>n(S) ใหม่ = n(F)</strong> → Sample Space เล็กลง
+                        </p>
+                    </div>
+                    <div style="background:rgba(128,222,234,0.06); padding:15px 25px; border-radius:10px; border-left:6px solid #80deea;">
+                        <p style="font-size:1.2rem;">
+                            📌 <strong>n(E) ใหม่ = n(E ∩ F)</strong> → เศษก็ต้องเปลี่ยนตาม
+                        </p>
+                    </div>
+                    <div style="background:rgba(255,235,59,0.06); padding:15px 25px; border-radius:10px; border-left:6px solid #ffeb3b;">
+                        <p style="font-size:1.2rem;">
+                            📌 <strong>P(E | F) = n(E ∩ F) / n(F)</strong> → สูตรที่ใช้จริง
+                        </p>
+                    </div>
+                </div>
+                <br>
+                <div class="box" style="background:rgba(255,235,59,0.04);">
+                    <p style="font-size:1.1rem;">
+                        ⭐ <span class="highlight-yellow">"ข้อมูลเพิ่มเติม = โลกแคบลง = ความน่าจะเป็นเปลี่ยน"</span>
+                    </p>
+                </div>
+                <p class="footer-note">✨ เข้าใจแล้วใช่ไหมคะ? ถ้าอยากได้ตัวอย่างเพิ่มเติม บอกได้เลยค่ะ ✨</p>
+            </section>
+
+        </div> <!-- end .slides -->
+    </div> <!-- end .reveal -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            width: 1024,
+            height: 768,
+            margin: 0.08
+        });
+    </script>
+</body>
+</html>
